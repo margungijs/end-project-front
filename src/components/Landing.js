@@ -7,6 +7,7 @@ import { FaUserPlus } from "react-icons/fa";
 import { BsStars } from "react-icons/bs";
 
 
+
 const Landing = () => {
     useEffect(() => {
         const handleMouseMove = (e) => {
