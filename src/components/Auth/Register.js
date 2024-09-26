@@ -11,6 +11,10 @@ const Register = () => {
         navigate('/auth');
     }
 
+    const HandleRedirect = () => {
+        navigate('/verification');
+    }
+
     const [register, setRegister] = useState({
         name: "",
         email: "",
@@ -39,10 +43,22 @@ const Register = () => {
                 SendData(register, "http://localhost/api/auth/register")
                     .then(response => {
                         console.log("Data sent succesfully", response)
+                        if(response.status === 201){
+                            HandleRedirect();
+                        }else{
+                            const errorObject = Object.entries(response.errors).reduce((acc, [key, value]) => {
+                                if (key === 'passwordc') {
+                                    acc[key] = 'Passwords don\'t match.';
+                                } else {
+                                    acc[key] = value[0];
+                                }
+                                return acc;
+                            }, {});
+                            setError(errorObject)
+                        }
                     })
                     .catch(error => {
                         console.error('Error sending data:', error.message);
-
                     });
             }
         }else{
