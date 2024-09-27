@@ -1,4 +1,5 @@
-const SendData = async (data, api) => {
+const SendData = async (data, api, loading) => {
+    loading()
     try {
         const response = await fetch(api, {
             method: 'POST',
