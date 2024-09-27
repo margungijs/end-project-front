@@ -5,6 +5,7 @@ import Register from "./components/Auth/Register.js";
 import Auth from "./components/Auth/Auth.js";
 import Dashboard from "./components/Dashboard";
 import Verification from "./components/Auth/Verification";
+import ProfileImage from "./components/Auth/ProfileImage";
 
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
             <Route path='/auth' element = {<Auth />} />
             <Route path='/dashboard' element = {<Dashboard />} />
             <Route path='/Verification' element = {<Verification />} />
+            <Route path='/profileImage' element = {<ProfileImage />} />
         </Routes>
     )
 }
