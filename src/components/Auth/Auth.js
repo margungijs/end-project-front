@@ -5,6 +5,7 @@ import {errorCheck, touched} from "../../assets/Validations";
 import SendData from "../../reuse/SendData";
 import Cookies from 'js-cookie';
 import {OrbitProgress} from "react-loading-indicators";
+import axios from "axios";
 
 const Auth = () => {
     const navigate = useNavigate();
@@ -36,6 +37,8 @@ const Auth = () => {
         password: "",
     });
 
+    const [Berror, setBError] = useState(false);
+
     const [forceUpdate, setForceUpdate] = useState(false);
 
     const HandleSubmit = () => {
@@ -43,34 +46,25 @@ const Auth = () => {
         console.log(login, error)
         setForceUpdate(prevState => !prevState);
         if(!errorCheck(error)){
-            SendData(login, "http://localhost/api/auth/login", isLoading)
-                .then(response => {
-                    console.log("Data sent succesfully", response)
-                    stopLoading();
-                    if(response.access_token){
-                        Cookies.set('access_token', response.access_token, {expires: 7, path: '/'})
-                        HandleRedirect();
-                    }else if (response.password){
-                        setError((prevState) => ({
-                            ...prevState,
-                            "password": "Incorrect password"
-                        }));
-                    }else{
-                        setError((prevState) => ({
-                            ...prevState,
-                            "name": "Username not found"
-                        }));
-                    }
-                })
-                .catch(error => {
-                    console.error('Error sending data:', error.message);
-                });
+            setBError(false);
+            SendData(
+                login, "http://localhost/login", isLoading
+            ).then(response => {
+                stopLoading();
+                if(!response){
+                    HandleRedirect();
+                }
+            }).catch(error => {
+                console.log("Error", error)
+                setBError(true)
+                stopLoading()
+            })
         }
     }
 
     return (
         <div className = "bg-neutral-950 h-screen w-screen flex flex-col items-center overflow-x-hidden">
-            <div className = "bg-[#111111] rounded-lg w-3/12 mt-40 py-8 px-6 border-[1px] border-neutral-700 mb-6">
+            <div className = "bg-[#111111] rounded-lg w-3/12 mt-40 py-8 px-6 border-[1px] border-neutral-700 mb-4">
                 {!loading && (
                     <>
                         <h1 className = "text-4xl text-yellow-300 mb-8">Sign into Chronicle</h1>
@@ -97,6 +91,7 @@ const Auth = () => {
 
                     </>
                 )}
+
                 {loading && (
                     <div className = "w-full flex flex-col justify-center items-center py-40">
                         <OrbitProgress variant="track-disc" dense color="#3163cc" size="medium" text="" textColor="" />
@@ -104,6 +99,11 @@ const Auth = () => {
                     </div>
                 )}
             </div>
+            {Berror && (
+                <div className = "bg-[#111111] rounded-lg w-3/12 py-6 border-[1px] border-red-700 flex flex-col items-center justify-center mb-4">
+                    <h1 className = "text-red-700">Invalid username or password</h1>
+                </div>
+            )}
             <div className = "bg-[#111111] rounded-lg w-3/12 py-6 border-[1px] border-neutral-700 flex flex-col items-center justify-center">
                 <h1 className = "text-neutral-200">Don't have an account? <span className = "text-blue-500 cursor-pointer" onClick = {HandleSignUp}>Sign up</span></h1>
             </div>

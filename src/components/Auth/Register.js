@@ -52,27 +52,23 @@ const Register = () => {
                 }));
             }
             if(!errorCheck(error)){
-                SendData(register, "http://localhost/api/auth/register", isLoading)
-                    .then(response => {
-                        console.log("Data sent succesfully", response)
-                        stopLoading();
-                        if(response.status === 201){
-                            HandleRedirect();
-                        }else{
-                            const errorObject = Object.entries(response.errors).reduce((acc, [key, value]) => {
-                                if (key === 'passwordc') {
-                                    acc[key] = 'Passwords don\'t match.';
-                                } else {
-                                    acc[key] = value[0];
-                                }
-                                return acc;
-                            }, {});
-                            setError(errorObject)
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error sending data:', error.message);
+                SendData(
+                    register, "http://localhost/register", isLoading
+                ).then(response => {
+                    console.log(response)
+                    stopLoading()
+                }).catch(error => {
+                    console.log("Error", error.response['data']['errors'])
+                    stopLoading()
+                    const validationErrors = error.response['data']['errors'];
+
+                    setError({
+                        name: validationErrors.name ? validationErrors.name[0] : "",
+                        email: validationErrors.email ? validationErrors.email[0] : "",
+                        password: validationErrors.password ? validationErrors.password[0] : "",
+                        password_confirmation: validationErrors.password_confirmation ? validationErrors.password_confirmation[0] : ""
                     });
+                })
             }
         }else{
             setError((prevState) => ({

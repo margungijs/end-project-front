@@ -1,16 +1,34 @@
-import React from 'react';
-import Logo from "../assets/images/final_final.png";
+import React, {useEffect, useState} from 'react';
+import Logo from "../../assets/images/final_final.png";
 import { HiMagnifyingGlass } from "react-icons/hi2";
 import DashboardHeader from "./DashboardHeader";
 import { FaHome } from "react-icons/fa";
 import { GoStarFill } from "react-icons/go";
 import { BsStars } from "react-icons/bs";
 import {FaM, FaMessage} from "react-icons/fa6";
+import axios from "axios";
 
 const Dashboard = () => {
+    const [data, setData] = useState({});
+    const [profile, setProfile] = useState(false);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get('http://localhost/api/user');
+                console.log(response.data);
+                setData(response.data);
+            } catch (error) {
+                console.error('Error fetching the data', error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
     return (
         <div className = "bg-neutral-950 h-screen w-full flex flex-col">
-            <DashboardHeader />
+            <DashboardHeader name = {data.name} image = {data.image} profile={() => setProfile(!profile)}/>
             <div className = "h-full p-2 w-1/4">
                 <div className = "rounded-md flex flex-col bg-[#111111] border-[1px] border-neutral-700 py-8 px-6">
                     <div className = "flex flex-row justify-between items-center mb-8">

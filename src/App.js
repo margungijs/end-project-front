@@ -3,12 +3,19 @@ import { Route, Routes } from 'react-router-dom';
 import Landing from "./components/Landing";
 import Register from "./components/Auth/Register.js";
 import Auth from "./components/Auth/Auth.js";
-import Dashboard from "./components/Dashboard";
+import Dashboard from "./components/Dashboard/Dashboard";
 import Verification from "./components/Auth/Verification";
 import ProfileImage from "./components/Auth/ProfileImage";
+import { useEffect} from "react";
+import axios from "axios";
 
 
 function App() {
+    useEffect(() => {
+        axios.defaults.withCredentials = true;
+        axios.defaults.withXSRFToken = true;
+    });
+
     return (
         <Routes>
             <Route path='/' element={<Landing />} />

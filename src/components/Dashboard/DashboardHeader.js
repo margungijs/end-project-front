@@ -1,15 +1,17 @@
 import React from 'react';
-import Logo from "../assets/images/final_final.png";
+import Logo from "../../assets/images/final_final.png";
 import {HiMagnifyingGlass} from "react-icons/hi2";
-import Image from "../assets/images/7195ce2c8612cffa80b20ebf756d99c7.jpg";
+import Image from "../../assets/images/7195ce2c8612cffa80b20ebf756d99c7.jpg";
+import { FaRegUserCircle } from "react-icons/fa";
 import { RiAddBoxLine } from "react-icons/ri";
+import DropDown from "./DropDown";
 
-const DashboardHeader = () => {
+const DashboardHeader = ({name, image, profile}) => {
     return (
         <div className = "flex flex-row w-full bg-black py-4 px-6 text-neutral-200 justify-between items-center border-b-[1px] border-neutral-700">
             <div className = "flex flex-row items-center">
                 <img src={Logo} className = "w-8 h-8 mr-4"/>
-                <h1 className = "mr-20 text-2xl">Dashboard</h1>
+                <h1 className = "mr-20 text-2xl">{name}</h1>
             </div>
             <div className = "w-2/5 relative">
                 <HiMagnifyingGlass className = "absolute text-neutral-700 z-10 text-xl left-2 top-1/2 transform -translate-y-1/2 pointer-events-none"/>
@@ -24,7 +26,11 @@ const DashboardHeader = () => {
                 <div className="w-8 h-8 rounded-lg border-[1px] mr-4 border-neutral-700 relative flex items-center justify-center">
                     <h1 className = "text-neutral-600 font-normal text-2xl">+</h1>
                 </div>
-                <img src={Image} className = "rounded-full w-8 h-8"/>
+                {image !== null ? (
+                    <img src={image} onClick={profile} className = "rounded-full w-8 h-8 cursor-pointer"/>
+                ) : (
+                    <FaRegUserCircle onClick={profile} className = "w-8 h-8 text-neutral-700 cursor-pointer"/>
+                )}
             </div>
         </div>
     );

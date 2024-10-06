@@ -1,12 +1,17 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import Logo from "../../assets/images/final_final.png"
 import { RiImageCircleFill } from "react-icons/ri";
+import sendImage from "../../reuse/SendImage.js";
+import Cookies from 'js-cookie';
+import FetchCSRF from "../../reuse/FetchCSRF.js";
 
 const ProfileImage = () => {
     const fileInputRef = useRef(null);
     const [fileName, setFileName] = useState(null);
     const [filePreview, setFilePreview] = useState(null);
-
+    const [file, setFile] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [csrfToken, setCsrfToken] = useState('');
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
@@ -14,6 +19,7 @@ const ProfileImage = () => {
             if (file.type.startsWith("image/")) {
                 setFileName(file.name);
                 setFilePreview(URL.createObjectURL(file));
+                setFile(file)
             }
         }
     };
@@ -21,6 +27,22 @@ const ProfileImage = () => {
     const handleDivClick = () => {
         fileInputRef.current.click();
     };
+
+    const HandleSubmit = () => {
+        if(file){
+            const formData = new FormData();
+            formData.append('image', file);
+
+            sendImage(formData, "http://localhost/api/auth/image", () => setLoading(true), csrfToken)
+                .then(response => {
+                    console.log("Data sent succesfully", response)
+                })
+                .catch(error => {
+                    console.log("Error", error)
+                });
+        }
+    }
+
 
     return (
         <div className = "bg-neutral-950 flex flex-col justify-center items-center h-screen w-full">
@@ -57,7 +79,9 @@ const ProfileImage = () => {
                         filePreview ? 'bg-green-600 cursor-pointer hover:bg-green-700 transform duration-300' : 'bg-green-700/50'
                     }`}
                 >
-                    <h1 className={`text-xl ${filePreview ? 'text-neutral-200' : 'text-neutral-500'}`}>
+                    <h1
+                        onClick={HandleSubmit}
+                        className={`text-xl ${filePreview ? 'text-neutral-200' : 'text-neutral-500'}`}>
                         Next
                     </h1>
                 </div>

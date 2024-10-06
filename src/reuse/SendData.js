@@ -1,22 +1,22 @@
+import {GetXSRFToken} from "../assets/GetXSRFToken.js";
+import axios from "axios";
+
 const SendData = async (data, api, loading) => {
     loading()
-    try {
-        const response = await fetch(api, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
+    await axios.get(
+        'http://localhost/sanctum/csrf-cookie',
+    );
+
+    await axios.post(
+        api,
+        {...data},
+        {
+            header:{
+                accept: 'application/json',
             },
-            body: JSON.stringify(data),
-        });
-
-        if (!response.ok) {
-            throw new Error('Request failed');
+            withCredentials: true
         }
-
-        return await response.json(); // Return the data if request was successful
-    } catch (error) {
-        throw new Error('Failed to send data: ' + error.message);
-    }
+    )
 };
 
 export default SendData;
