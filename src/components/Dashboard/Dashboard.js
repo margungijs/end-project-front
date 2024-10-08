@@ -5,6 +5,7 @@ import { GoStarFill } from "react-icons/go";
 import { BsStars } from "react-icons/bs";
 import {FaMessage} from "react-icons/fa6";
 import axios from "axios";
+import FriendPost from "./Posts/FriendPost";
 
 const Dashboard = () => {
     const [data, setData] = useState({});
@@ -55,8 +56,8 @@ const Dashboard = () => {
                         </div>
                     </div>
                 </div>
-                <div className = "flex flex-col p-2 items-center">
-                    <div className = "flex flex-row">
+                <div className = "flex flex-col px-2 py-8 w-2/4">
+                    <div className = "flex flex-row mb-6">
                         <h1 className = "text-2xl text-neutral-200 mr-4">Chronicle</h1>
                         <h1
                             className = {`text-xl ${feed ? 'text-neutral-700' : 'text-blue-500'} transition duration-200 cursor-pointer flex items-center border-r-[1px] pr-2 border-neutral-700`}
@@ -66,6 +67,9 @@ const Dashboard = () => {
                             className = {`text-xl ${feed ? 'text-blue-500' : 'text-neutral-700'} transition duration-200 cursor-pointer flex items-center ml-2`}
                             onClick = {() => setFeed(true)}
                         >Explore</h1>
+                    </div>
+                    <div className = "flex flex-col">
+                        <FriendPost />
                     </div>
                 </div>
             </div>
