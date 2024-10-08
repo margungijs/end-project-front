@@ -2,8 +2,6 @@ import React, {useState, useRef, useEffect} from 'react';
 import Logo from "../../assets/images/final_final.png"
 import { RiImageCircleFill } from "react-icons/ri";
 import sendImage from "../../reuse/SendImage.js";
-import Cookies from 'js-cookie';
-import FetchCSRF from "../../reuse/FetchCSRF.js";
 
 const ProfileImage = () => {
     const fileInputRef = useRef(null);

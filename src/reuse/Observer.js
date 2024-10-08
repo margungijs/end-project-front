@@ -16,18 +16,16 @@ export const observer = new IntersectionObserver((entries) => {
 });
 
 
-
 export const observerBottom = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
-        if (entry.intersectionRatio === 1) {  // When the element is fully visible
+        if (entry.intersectionRatio === 1) {
             entry.target.classList.add('show-animate-bot');
         } else if (!entry.isIntersecting && entry.boundingClientRect.top > 0) {
-            // If the element is not intersecting and scrolled up past it, remove the class
             entry.target.classList.remove('show-animate-bot');
         }
     });
 }, {
-    threshold: 1 // The callback triggers when the element is fully visible
+    threshold: 1
 });
 
 

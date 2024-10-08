@@ -1,12 +1,10 @@
 import React from 'react';
 import Logo from "../../assets/images/final_final.png";
 import {HiMagnifyingGlass} from "react-icons/hi2";
-import Image from "../../assets/images/7195ce2c8612cffa80b20ebf756d99c7.jpg";
 import { FaRegUserCircle } from "react-icons/fa";
-import { RiAddBoxLine } from "react-icons/ri";
 import DropDown from "./DropDown";
 
-const DashboardHeader = ({name, image, profile}) => {
+const DashboardHeader = ({name, image, profile, open}) => {
     return (
         <div className = "flex flex-row w-full bg-black py-4 px-6 text-neutral-200 justify-between items-center border-b-[1px] border-neutral-700">
             <div className = "flex flex-row items-center">
@@ -32,6 +30,7 @@ const DashboardHeader = ({name, image, profile}) => {
                     <FaRegUserCircle onClick={profile} className = "w-8 h-8 text-neutral-700 cursor-pointer"/>
                 )}
             </div>
+            <DropDown name = {name} image = {image} open = {profile} status = {open}/>
         </div>
     );
 };

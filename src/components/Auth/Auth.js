@@ -3,9 +3,7 @@ import {useNavigate} from "react-router-dom";
 import {HandleInputChange} from "../../reuse/HandleInputChange";
 import {errorCheck, touched} from "../../assets/Validations";
 import SendData from "../../reuse/SendData";
-import Cookies from 'js-cookie';
 import {OrbitProgress} from "react-loading-indicators";
-import axios from "axios";
 
 const Auth = () => {
     const navigate = useNavigate();

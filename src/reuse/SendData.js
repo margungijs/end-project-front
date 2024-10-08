@@ -1,4 +1,3 @@
-import {GetXSRFToken} from "../assets/GetXSRFToken.js";
 import axios from "axios";
 
 const SendData = async (data, api, loading) => {
