@@ -12,7 +12,7 @@ const FriendPost = () => {
                 <BsStars className = "text-neutral-200 mr-1"/>
                 <h1 className = "text-neutral-600">added a new post</h1>
             </div>
-            <h1 className = "text-neutral-600 text-sm ml-10 mb-8">08/10/2024</h1>
+            <h1 className = "text-neutral-600 text-sm ml-10 mb-4">08/10/2024</h1>
             <div className = "flex flex-row bg-neutral-900 border-[1px] items-center border-neutral-700 rounded-md p-4 justify-between">
                 <div className = "flex flex-row">
                     <img src={Image} className = "w-6 h-6 rounded-full mr-2"/>
