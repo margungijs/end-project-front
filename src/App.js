@@ -1,8 +1,8 @@
 import './App.css';
 import { Route, Routes } from 'react-router-dom';
 import Landing from "./components/Landing";
-import Register from "./components/Auth/Register.js";
-import Auth from "./components/Auth/Auth.js";
+import Register from "./components/Auth/Register.jsx";
+import Auth from "./components/Auth/Auth.jsx";
 import Dashboard from "./components/Dashboard/Dashboard";
 import Verification from "./components/Auth/Verification";
 import ProfileImage from "./components/Auth/ProfileImage";

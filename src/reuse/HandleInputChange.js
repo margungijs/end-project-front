@@ -1,4 +1,4 @@
-import {empty, noSymbol, emailCheck, lengthCheck, passwords, safePassword} from "../assets/Validations.js";
+import {empty, noSymbol, emailCheck, lengthCheck, passwords, safePassword} from "../assets/Validations.jsx";
 
 export const HandleInputChange = (e, setState, setError, type) => {
     const { name, value } = e.target;

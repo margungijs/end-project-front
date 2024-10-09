@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {HandleInputChange} from "../../reuse/HandleInputChange";
-import {errorCheck, touched, passwords} from "../../assets/Validations.js";
+import {errorCheck, touched, passwords} from "../../assets/Validations.jsx";
 import SendData from "../../reuse/SendData";
 import {OrbitProgress} from "react-loading-indicators";
 

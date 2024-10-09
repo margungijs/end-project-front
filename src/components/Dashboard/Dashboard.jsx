@@ -9,6 +9,8 @@ import FriendPost from "./Posts/FriendPost";
 import NewPost from "./Recommendations/NewPost";
 import { IoIosPlay } from "react-icons/io";
 import AdditionalInfo from "./Recommendations/AdditionalInfo";
+import { FiAward } from "react-icons/fi";
+import Shortcut from "./Recommendations/Shortcut";
 
 const Dashboard = () => {
     const [data, setData] = useState({});
@@ -34,7 +36,7 @@ const Dashboard = () => {
             <DashboardHeader name = {data.name} image = {data.image} profile={() => setProfile(!profile)} open = {profile}/>
             <div className = "flex flex-row">
                 <div className = "h-full p-2 w-1/4">
-                    <div className = "rounded-md flex flex-col bg-[#111111] border-[1px] border-neutral-700 py-8 px-6">
+                    <div className = "rounded-md h-screen flex flex-col bg-[#111111] border-[1px] border-neutral-700 py-8 px-6">
                         <div className = "flex flex-row justify-between items-center mb-8">
                             <h1 className = "text-neutral-200 text-2xl">Shortcuts</h1>
                             <div className = "bg-blue-600 rounded-lg flex flex-col items-center justify-center px-4 py-1 cursor-pointer hover:bg-blue-700 transform duration-300">
@@ -78,6 +80,13 @@ const Dashboard = () => {
                     <div className = "flex flex-row mb-6 gap-4">
                         <NewPost />
                         <AdditionalInfo />
+                    </div>
+                    <div className = "mb-2 flex flex-row items-center">
+                        <FiAward className = "text-xl text-purple-500 mr-2"/>
+                        <h1 className = "text-neutral-600">Getting deeper</h1>
+                    </div>
+                    <div className = "flex flex-row mb-6 gap-4">
+                        <Shortcut />
                     </div>
                     <div className = "flex flex-col">
                         <FriendPost />
