@@ -11,6 +11,7 @@ import { IoIosPlay } from "react-icons/io";
 import AdditionalInfo from "./Recommendations/AdditionalInfo";
 import { FiAward } from "react-icons/fi";
 import Shortcut from "./Recommendations/Shortcut";
+import Template from "./Recommendations/Template";
 
 const Dashboard = () => {
     const [data, setData] = useState({});
@@ -87,6 +88,7 @@ const Dashboard = () => {
                     </div>
                     <div className = "flex flex-row mb-6 gap-4">
                         <Shortcut />
+                        <Template />
                     </div>
                     <div className = "flex flex-col">
                         <FriendPost />

@@ -11,7 +11,7 @@ const NewPost = () => {
                 <h1 className = "text-neutral-200">Let's start with the title</h1>
                 <input
                     type="text"
-                    className = "bg-[#111111] rounded-md border-[1px] border-neutral-700 placeholder-neutral-600 indent-2 py-1"
+                    className = "bg-[#111111] transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-neutral-600 rounded-md border-[1px] border-neutral-700 placeholder-neutral-600 indent-2 py-1"
                     placeholder = "title your post"
                 />
             </div>
