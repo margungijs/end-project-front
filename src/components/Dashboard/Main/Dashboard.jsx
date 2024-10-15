@@ -5,25 +5,30 @@ import { GoStarFill } from "react-icons/go";
 import { BsStars } from "react-icons/bs";
 import {FaMessage} from "react-icons/fa6";
 import axios from "axios";
-import FriendPost from "./Posts/FriendPost";
-import NewPost from "./Recommendations/NewPost";
+import FriendPost from "../Posts/FriendPost";
+import NewPost from "../Recommendations/NewPost";
 import { IoIosPlay } from "react-icons/io";
-import AdditionalInfo from "./Recommendations/AdditionalInfo";
+import AdditionalInfo from "../Recommendations/AdditionalInfo";
 import { FiAward } from "react-icons/fi";
-import Shortcut from "./Recommendations/Shortcut";
-import Template from "./Recommendations/Template";
+import Shortcut from "../Recommendations/Shortcut";
+import Template from "../Recommendations/Template";
+import Shortcuts from "./Shortcuts";
 
 const Dashboard = () => {
     const [data, setData] = useState({});
     const [profile, setProfile] = useState(false);
     const [feed, setFeed] = useState(false);
+    const [shortcuts, setShortcuts] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost/api/user');
-                console.log(response.data);
-                setData(response.data);
+                const response = await axios.get('http://localhost/api/authenticated/user');
+                console.log(response.data.user)
+                setData(response.data.user);
+                setShortcuts(response.data.user.shortcuts);
+                localStorage.setItem('name', response.data.user.name);
+                localStorage.setItem('image', response.data.user.image);
             } catch (error) {
                 console.error('Error fetching the data', error);
             }
@@ -36,32 +41,7 @@ const Dashboard = () => {
         <div className = "bg-neutral-950 h-screen w-screen flex flex-col overflow-x-hidden relative">
             <DashboardHeader name = {data.name} image = {data.image} profile={() => setProfile(!profile)} open = {profile}/>
             <div className = "flex flex-row">
-                <div className = "h-full p-2 w-1/4">
-                    <div className = "rounded-md h-screen flex flex-col bg-[#111111] border-[1px] border-neutral-700 py-8 px-6">
-                        <div className = "flex flex-row justify-between items-center mb-8">
-                            <h1 className = "text-neutral-200 text-2xl">Shortcuts</h1>
-                            <div className = "bg-blue-600 rounded-lg flex flex-col items-center justify-center px-4 py-1 cursor-pointer hover:bg-blue-700 transform duration-300">
-                                <h1 className = "text-white">New</h1>
-                            </div>
-                        </div>
-                        <div className = "flex flex-row items-center cursor-pointer text-neutral-300  hover:text-blue-500 transform duration-300 mb-8">
-                            <FaHome className = "text-neutral-300 mr-4 w-8 h-8"/>
-                            <h1 className = "text-xl">Home</h1>
-                        </div>
-                        <div className = "flex flex-row items-center cursor-pointer text-neutral-300 hover:text-blue-500 transform duration-300 mb-8">
-                            <GoStarFill className = "text-neutral-300 mr-4 w-8 h-8"/>
-                            <h1 className = " text-xl">Your Posts</h1>
-                        </div>
-                        <div className = "flex flex-row items-center cursor-pointer text-neutral-300  hover:text-blue-500 transform duration-300 mb-8">
-                            <FaMessage className = "text-neutral-300 mr-4 w-8 h-8"/>
-                            <h1 className = "text-xl">Messages</h1>
-                        </div>
-                        <div className = "flex flex-row items-center cursor-pointer text-neutral-300 hover:text-blue-500 transform duration-300">
-                            <BsStars className = "text-neutral-300 mr-4 w-8 h-8"/>
-                            <h1 className = "text-xl">Friends</h1>
-                        </div>
-                    </div>
-                </div>
+                <Shortcuts shortcuts = {shortcuts} />
                 <div className = "flex flex-col px-2 py-8 w-2/4">
                     <div className = "flex flex-row mb-4">
                         <h1 className = "text-2xl text-neutral-200 mr-4">Chronicle</h1>
