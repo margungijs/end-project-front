@@ -26,7 +26,7 @@ const ShortcutConfiguration = ({ newRoute }) => {
                     <ul className="text-neutral-600">
                         <li
                             className="hover:bg-neutral-900 rounded-md transition duration-200 p-1"
-                            onClick={() => setValue('Profile')}
+                            onClick={() => {setValue('Profile'); newRoute('Profile')}}
                         >Profile</li>
                         <li
                             className="hover:bg-neutral-900 rounded-md transition duration-200 p-1"
@@ -34,11 +34,11 @@ const ShortcutConfiguration = ({ newRoute }) => {
                         >Friends</li>
                         <li
                             className="hover:bg-neutral-900 rounded-md transition duration-200 p-1"
-                            onClick={() => setValue('Settings')}
+                            onClick={() => {setValue('Settings'); newRoute('Settings')}}
                         >Settings</li>
                         <li
                             className="hover:bg-neutral-900 rounded-md transition duration-200 p-1"
-                            onClick={() => setValue('Posts')}
+                            onClick={() => {setValue('Posts'); newRoute('Posts')}}
                         >Posts</li>
                     </ul>
                 </div>

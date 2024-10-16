@@ -29,10 +29,12 @@ const ShortcutPreview = ({shortcuts, preview}) => {
             </div>
             {shortcuts.map((shortcut, index) => (
                 <div
-                    className = {`flex flex-row items-center cursor-pointer text-${shortcut.customisation.color}-500 hover:text-${shortcut.customisation.color_hover}-700 transform duration-300 mb-8`}
+                    className = {`flex flex-row items-center cursor-pointer text-${shortcut.customisation.color.toLowerCase()}-500 hover:text-${shortcut.customisation.hover_color.toLowerCase()}-700 transform duration-300 mb-8`}
                     key = {index}
                 >
-                    <BsStars className = "text-neutral-300 mr-4 w-8 h-8"/>
+                    <div className="text-neutral-300 mr-4">
+                        {React.cloneElement(icons.find((item) => item.value === parseInt(shortcut.customisation.icon)).logo, { className: "w-8 h-8" })}
+                    </div>
                     <h1 className = "text-xl">{shortcut.name}</h1>
                 </div>
             ))}
