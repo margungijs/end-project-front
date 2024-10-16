@@ -5,7 +5,6 @@ import {FaMessage} from "react-icons/fa6";
 import {BsStars} from "react-icons/bs";
 
 const Shortcuts = ({shortcuts}) => {
-
     return (
         <div className = "h-full p-2 w-1/4">
             <div className = "rounded-md h-screen flex flex-col bg-[#111111] border-[1px] border-neutral-700 py-8 px-6">
