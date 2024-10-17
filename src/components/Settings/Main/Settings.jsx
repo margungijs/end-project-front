@@ -12,8 +12,7 @@ const Settings = () => {
             <DashboardHeader />
             <div className = "flex flex-row p-2 gap-4 w-screen">
                 <SettingsChoices selected = {selected} setSelected={setSelected}/>
-                {/*<ShortcutMain />*/}
-                <GeneralMain />
+                {selected === "shortcuts" ? <ShortcutMain /> : <GeneralMain />}w
             </div>
         </div>
     );

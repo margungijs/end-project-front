@@ -7,6 +7,7 @@ import {IoMdArrowDropdown} from "react-icons/io";
 const GeneralMain = () => {
     const name = localStorage.getItem('name');
     const [value, setValue] = useState(0);
+    const [privacy, setPrivacy] = useState(false);
     const marks = [
         { value: 0, label: '2 weeks' },
         { value: 1, label: '1 month' },
@@ -44,14 +45,16 @@ const GeneralMain = () => {
         },
         '& .MuiSlider-thumb': {
             color: '#16A34A',
-            pointerEvents: 'none', // Make the thumb not interactable
+            transition: 'transform 0.3s ease',
+            pointerEvents: 'none',
             '&:focus': {
-                boxShadow: 'none' // Remove the outer clicked effect
+                boxShadow: 'none'
             }
         },
         '& .MuiSlider-track': {
             color: '#16A34A',
-            height: '9px'
+            height: '9px',
+            transition: 'transform 0.3s ease',
         },
         '& .MuiSlider-markLabel[data-index="0"]': {
             color: 'white',
@@ -97,8 +100,11 @@ const GeneralMain = () => {
                     </div>
                 </div>
             </div>
-            <div className = "flex flex-col text-neutral-200">
-                <h1 className = "text-2xl text-neutral-200">Post rate limiter</h1>
+            <div className = "bg-[#111111] border-[1px] hover:border-neutral-500 transition duration-200 cursor-pointer border-neutral-700 mb-4 rounded-md text-center p-1 w-40">
+                <h1 className = "text-neutral-200">Edit profile</h1>
+            </div>
+            <div className = "flex flex-col text-neutral-200 mb-4">
+                <h1 className = "text-2xl text-neutral-200 mb-1">Post rate limiter</h1>
                 <div className = "flex flex-row items-center gap-4">
                     <h1 className = "text-xl text-neutral-600">Set the time period you want to be able to add posts in</h1>
                     <div
@@ -126,6 +132,33 @@ const GeneralMain = () => {
                         value = {value}
                     />
                 </div>
+            </div>
+            <h1 className = "text-2xl text-neutral-200 mb-1">Profile privacy</h1>
+            <h1 className = "text-xl text-neutral-600">Your profile will be private by default to users that aren't on your friend list, but you can choose to set your profile to public or private to your friends</h1>
+            <div className = "flex flex-row p-4 justify-between gap-2">
+                <div className = "flex flex-row items-center w-1/2">
+                    <div
+                        className = {`w-4 h-4 border-2 transition duration-200 ${privacy ? "border-neutral-600" : "border-green-600"} mr-4 cursor-pointer flex-shrink-0`}
+                        onClick={() => setPrivacy(!privacy)}
+                    ></div>
+                    <div className = "flex flex-col">
+                        <h1 className = {`text-xl transition duration-200 ${privacy ? "text-neutral-600" : "text-neutral-200"}`}>Public</h1>
+                        <h1 className = "text-neutral-600">Your profile will be fully public to your friends</h1>
+                    </div>
+                </div>
+                <div className = "flex flex-row items-center w-1/2">
+                    <div
+                        className = {`w-4 h-4 border-2 transition duration-200 ${privacy ? "border-green-600" : "border-neutral-600"} mr-4 cursor-pointer flex-shrink-0`}
+                        onClick={() => setPrivacy(!privacy)}
+                    ></div>
+                    <div className = "flex flex-col">
+                        <h1 className = {`text-xl transition duration-200 ${privacy ? "text-neutral-200" : "text-neutral-600"}`}>Private</h1>
+                        <h1 className = "text-neutral-600">Your profile will be private to your friends, but you will be able to set it to public to selected friends</h1>
+                    </div>
+                </div>
+            </div>
+            <div className = "bg-[#111111] border-[1px] hover:border-green-600 transition duration-200 cursor-pointer border-neutral-700 mb-4 rounded-md text-center p-1 w-20">
+                <h1 className = "text-neutral-200">Save</h1>
             </div>
         </div>
     );
