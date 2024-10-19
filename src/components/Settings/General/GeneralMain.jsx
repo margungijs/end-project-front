@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
 import image from "../../../assets/images/7195ce2c8612cffa80b20ebf756d99c7.jpg";
 import Slider from '@mui/material/Slider';
 import { styled } from '@mui/material/styles';
@@ -8,6 +8,9 @@ const GeneralMain = () => {
     const name = localStorage.getItem('name');
     const [value, setValue] = useState(0);
     const [privacy, setPrivacy] = useState(false);
+    const fileInputRef = useRef(null);
+    const [selectedImage, setSelectedImage] = useState(null);
+
     const marks = [
         { value: 0, label: '2 weeks' },
         { value: 1, label: '1 month' },
@@ -79,12 +82,38 @@ const GeneralMain = () => {
         }
     });
 
+    const handleImageClick = () => {
+        fileInputRef.current.click();
+    };
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setSelectedImage(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
 
     return (
         <div className = "flex flex-col p-2 w-2/3">
             <h1 className = "text-neutral-200 text-2xl mb-4">General settings</h1>
             <div className = "flex flex-row items-center mb-4">
-                <img src={image} className = "w-40 h-40 rounded-full mr-4"/>
+                <div className="relative w-40 h-40 rounded-full mr-4 cursor-pointer" onClick={handleImageClick}>
+                    <img src={selectedImage || image} className="w-full h-full rounded-full"/>
+                    <div className="absolute inset-0 bg-black bg-opacity-50 rounded-full opacity-0 hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
+                        <span className="text-white text-lg">Change photo</span>
+                    </div>
+                </div>
+                <input
+                    type="file"
+                    ref={fileInputRef}
+                    style={{ display: 'none' }}
+                    onChange={handleFileChange}
+                />
                 <div className = "flex flex-col">
                     <h1 className = "text-3xl font-bold text-neutral-200 mb-2">{name}</h1>
                     <h1 className = "text-xl text-neutral-600 mb-1">Member since:

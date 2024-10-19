@@ -5,10 +5,10 @@ import Register from "./components/Auth/Register.jsx";
 import Auth from "./components/Auth/Auth.jsx";
 import Dashboard from "./components/Dashboard/Main/Dashboard";
 import Verification from "./components/Auth/Verification";
-import ProfileImage from "./components/Auth/ProfileImage";
 import { useEffect} from "react";
 import axios from "axios";
 import Settings from "./components/Settings/Main/Settings";
+import ProfileMain from "./components/Profile/ProfileMain";
 
 
 function App() {
@@ -24,8 +24,8 @@ function App() {
             <Route path='/auth' element = {<Auth />} />
             <Route path='/dashboard' element = {<Dashboard />} />
             <Route path='/Verification' element = {<Verification />} />
-            <Route path='/profileImage' element = {<ProfileImage />} />
             <Route path='/Settings' element = {<Settings />} />
+            <Route path='/Profiles' element = {<ProfileMain />} />
         </Routes>
     )
 }
