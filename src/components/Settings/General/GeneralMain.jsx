@@ -10,6 +10,7 @@ const GeneralMain = () => {
     const [privacy, setPrivacy] = useState(false);
     const fileInputRef = useRef(null);
     const [selectedImage, setSelectedImage] = useState(null);
+    const [imageError, setImageError] = useState(false);
 
     const marks = [
         { value: 0, label: '2 weeks' },
@@ -88,12 +89,15 @@ const GeneralMain = () => {
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
-        if (file) {
+        if (file && file.type.startsWith('image/')) {
+            setImageError(false)
             const reader = new FileReader();
             reader.onloadend = () => {
                 setSelectedImage(reader.result);
             };
             reader.readAsDataURL(file);
+        } else {
+            setImageError(true);
         }
     };
 
@@ -129,6 +133,11 @@ const GeneralMain = () => {
                     </div>
                 </div>
             </div>
+            {imageError && (
+                <div className = "bg-[#111111] border-[1px] border-red-600 my-2 rounded-md p-1 w-40 text-center">
+                    <h1 className = "text-neutral-200">Invalid file</h1>
+                </div>
+            )}
             <div className = "bg-[#111111] border-[1px] hover:border-neutral-500 transition duration-200 cursor-pointer border-neutral-700 mb-4 rounded-md text-center p-1 w-40">
                 <h1 className = "text-neutral-200">Edit profile</h1>
             </div>

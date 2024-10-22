@@ -1,9 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import DashboardHeader from "./DashboardHeader";
-import { FaHome } from "react-icons/fa";
-import { GoStarFill } from "react-icons/go";
-import { BsStars } from "react-icons/bs";
-import {FaMessage} from "react-icons/fa6";
 import axios from "axios";
 import FriendPost from "../Posts/FriendPost";
 import NewPost from "../Recommendations/NewPost";
@@ -13,27 +9,35 @@ import { FiAward } from "react-icons/fi";
 import Shortcut from "../Recommendations/Shortcut";
 import Template from "../Recommendations/Template";
 import Shortcuts from "./Shortcuts";
+import Friends from "./Friends";
 
 const Dashboard = () => {
     const [data, setData] = useState({});
     const [profile, setProfile] = useState(false);
     const [feed, setFeed] = useState(false);
     const [shortcuts, setShortcuts] = useState([]);
+    const [friends, setFriends] = useState([]);
+    const [requests, setRequests] = useState([]);
+
+    const fetchData = async () => {
+        try {
+            const response = await axios.get('http://localhost/api/authenticated/user');
+            console.log(response.data.user)
+            setData(response.data.user);
+            setShortcuts(response.data.user.shortcuts);
+            setFriends({
+                friends: response.data.user.friends_as_friend,
+                friends1: response.data.user.friends_as_user
+            })
+            setRequests(response.data.user.requests)
+            localStorage.setItem('name', response.data.user.name);
+            localStorage.setItem('image', response.data.user.image);
+        } catch (error) {
+            console.error('Error fetching the data', error);
+        }
+    };
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.get('http://localhost/api/authenticated/user');
-                console.log(response.data.user)
-                setData(response.data.user);
-                setShortcuts(response.data.user.shortcuts);
-                localStorage.setItem('name', response.data.user.name);
-                localStorage.setItem('image', response.data.user.image);
-            } catch (error) {
-                console.error('Error fetching the data', error);
-            }
-        };
-
         fetchData();
     }, []);
 
@@ -74,6 +78,7 @@ const Dashboard = () => {
                         <FriendPost />
                     </div>
                 </div>
+                <Friends friends = {friends} requests = {requests} setRequests={setRequests} fetch = {fetchData}/>
             </div>
         </div>
     );
