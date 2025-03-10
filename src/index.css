@@ -13,6 +13,7 @@ body {
   background-color: #141414;
   border-radius: 10px;
   margin: 4px;
+  z-index: 10;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -21,15 +22,19 @@ body {
   border: 4px solid transparent;
   background-clip: padding-box;
   transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+  z-index: 10;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background-color: #1f1f1f;
   transform: scale(1.1);
+  z-index: 10;
 }
 
 ::-webkit-scrollbar {
   width: 16px;
+  background-color: #141414; /* Match the background color to avoid white padding */
+  z-index: 10;
 }
 
 
@@ -102,4 +107,22 @@ code {
   overflow: hidden;
   animation: animateLine 1s ease forwards;
 }
+
+@keyframes growWidth {
+  from {
+    width: 0;
+  }
+  to {
+    width: 67%;
+  }
+}
+
+.grow {
+  animation: growWidth 1s forwards;
+}
+
+.grid-cols-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
 

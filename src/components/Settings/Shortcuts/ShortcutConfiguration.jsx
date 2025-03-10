@@ -1,11 +1,27 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {IoMdArrowDropdown} from "react-icons/io";
+import FetchData from "../../../reuse/FetchData";
 
 const ShortcutConfiguration = ({ newRoute }) => {
     const [dropdown, setDropdown] = useState(false);
     const [value, setValue] = useState('Profile');
     const [friendDropdown, setFriendDropdown] = useState(false);
     const [friendValue, setFriendValue] = useState('');
+    const [friends, setFriends] = useState([]);
+
+    const fetch = async () => {
+        try{
+            const response = await FetchData('http://localhost/api/authenticated/user');
+            console.log(response)
+            setFriends([...response.user.friends_as_friend, ...response.user.friends_as_user])
+        }catch (error){
+            console.log(error)
+        }
+    }
+
+    useEffect(() => {
+        fetch();
+    }, [])
 
     return (
         <div className = "flex flex-row w-full gap-4 py-2 mb-4">
@@ -28,10 +44,12 @@ const ShortcutConfiguration = ({ newRoute }) => {
                             className="hover:bg-neutral-900 rounded-md transition duration-200 p-1"
                             onClick={() => {setValue('Profile'); newRoute('Profile')}}
                         >Profile</li>
-                        <li
-                            className="hover:bg-neutral-900 rounded-md transition duration-200 p-1"
-                            onClick={() => setValue('Friends')}
-                        >Friends</li>
+                        {friends.length > 0 && (
+                            <li
+                                className="hover:bg-neutral-900 rounded-md transition duration-200 p-1"
+                                onClick={() => setValue('Friends')}
+                            >Friends</li>
+                        )}
                         <li
                             className="hover:bg-neutral-900 rounded-md transition duration-200 p-1"
                             onClick={() => {setValue('Settings'); newRoute('Settings')}}
@@ -63,26 +81,12 @@ const ShortcutConfiguration = ({ newRoute }) => {
                     }`}
                 >
                     <ul className="text-neutral-600">
-                        <li
-                            className="hover:bg-neutral-900 rounded-md transition duration-200 p-1"
-                            onClick = {() => {newRoute('/Profiles/Sasha'); setFriendValue('Sasha')}}
-                        >Sasha</li>
-                        <li
-                            className="hover:bg-neutral-900 rounded-md transition duration-200 p-1"
-                            onClick = {() => {newRoute('/Profiles/Krupix'); setFriendValue('Krupix')}}
-                        >Krupix</li>
-                        <li
-                            className="hover:bg-neutral-900 rounded-md transition duration-200 p-1"
-                            onClick = {() => {newRoute('/Profiles/Tomass'); setFriendValue('Tomass')}}
-                        >Tomass</li>
-                        <li
-                            className="hover:bg-neutral-900 rounded-md transition duration-200 p-1"
-                            onClick = {() => {newRoute('/Profiles/JecisPecis'); setFriendValue('JecisPecis')}}
-                        >JecisPecis</li>
-                        <li
-                            className="hover:bg-neutral-900 rounded-md transition duration-200 p-1"
-                            onClick = {() => {newRoute('/Profiles/MrAlexFTW'); setFriendValue('MrAlexFTW')}}
-                        >MrAlexFTW</li>
+                        {friends.map((friend, index) => (
+                            <li
+                                className="hover:bg-neutral-900 rounded-md transition duration-200 p-1"
+                                onClick = {() => {newRoute(friend.id.toString()); setFriendValue(friend.name)}}
+                            >{friend.name}</li>
+                        ))}
                     </ul>
                 </div>
             </div>

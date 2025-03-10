@@ -5,8 +5,10 @@ import {FaRegUserCircle} from "react-icons/fa";
 import ShortcutConfiguration from "./ShortcutConfiguration";
 import ShortcutCustomisation from "./ShortcutCustomisation";
 import sendDataGeneral from "../../../reuse/SendDataGeneral";
+import { useLocation } from "react-router-dom";
 
 const ShortcutMain = () => {
+    const location = useLocation();
     const [shortcuts, setShortcuts] = useState([]);
     const name = localStorage.getItem('name');
     const image = localStorage.getItem('image');
@@ -85,6 +87,12 @@ const ShortcutMain = () => {
         }));
     }
 
+    useEffect(() => {
+        if(location.state){
+            newRoute(location.state);
+        }
+    }, [location.state])
+
     return (
         <div className = "flex flex-row w-3/4 gap-4">
             <div className = "p-2 w-2/3 flex flex-col">
@@ -123,7 +131,7 @@ const ShortcutMain = () => {
                         <ShortcutConfiguration newRoute = {newRoute}/>
                     </>
                 )}
-                {newShortcut.route !== "" && (
+                {newShortcut.route !== "" && newShortcut.name && (
                     <>
                         <h1 className = "text-neutral-200 text-xl mb-1">Customise your shortcut</h1>
                         <h1 className = "text-neutral-600 text-md mb-2">Customise your shortcut to meet your aesthetic</h1>
@@ -135,12 +143,14 @@ const ShortcutMain = () => {
                         <h1 className = "text-red-700">Invalid shortcut creation</h1>
                     </div>
                 )}
-                <div
-                    className = "rounded-md cursor-pointer transition px-2 duration-200 hover:bg-blue-700 bg-blue-600 w-fit p-1"
-                    onClick={submitShortcut}
-                >
-                    <h1 className = "text-neutral-200">Create</h1>
-                </div>
+                {newShortcut.name && newShortcut.route && newShortcut.icon && newShortcut.color && newShortcut.hover_color && (
+                    <div
+                        className="rounded-md cursor-pointer transition px-2 duration-200 hover:bg-blue-700 bg-blue-600 w-fit p-1"
+                        onClick={submitShortcut}
+                    >
+                        <h1 className="text-neutral-200">Create</h1>
+                    </div>
+                )}
             </div>
             <ShortcutPreview shortcuts={shortcuts} preview = {newShortcut}/>
         </div>

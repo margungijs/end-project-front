@@ -1,17 +1,19 @@
 import React, {useState} from 'react';
 import { IoMdArrowDropdown } from "react-icons/io";
+import {useNavigate} from "react-router-dom";
 
 const Shortcut = () => {
+    const navigate = useNavigate();
     const [dropdown, setDropdown] = useState(false);
 
     const [value, setValue] = useState('Profile');
 
     return (
-        <div className="bg-[#111111] p-4 flex flex-col w-1/2 rounded-lg border-[1px] border-neutral-700">
+        <div className="bg-[#111111] p-4 flex flex-col lg:w-1/2 w-full rounded-lg">
             <h1 className="text-neutral-200 mb-2">Create a shortcut</h1>
             <h1 className="text-neutral-600 mb-2">Create personalised shortcuts throughout Chronicle</h1>
             <div
-                className="bg-neutral-950 relative rounded-md flex flex-row p-2 justify-between items-center cursor-pointer border-[1px] border-neutral-700"
+                className="bg-neutral-950 relative rounded-md flex flex-row p-2 justify-between items-center cursor-pointer "
                 onClick={() => setDropdown(!dropdown)}
             >
                 <h1 className="text-neutral-600">{value}</h1>
@@ -44,7 +46,10 @@ const Shortcut = () => {
                     </ul>
                 </div>
             </div>
-            <div className = "mt-auto rounded-md cursor-pointer transition duration-200 hover:bg-blue-700 bg-blue-600 w-fit p-1">
+            <div
+                className = "mt-auto rounded-md cursor-pointer transition duration-200 hover:bg-blue-700 bg-blue-600 w-fit p-1"
+                onClick = {() => navigate('/Settings?section=shortcuts', {state : value})}
+            >
                 <h1 className = "text-neutral-200">Customise</h1>
             </div>
         </div>

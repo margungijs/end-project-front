@@ -14,6 +14,7 @@ import {useNavigate} from "react-router-dom";
 const DropDown = ({name, image, open, status}) => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate()
+    const id = localStorage.getItem('id');
 
     const handleRedirect = () => {
         navigate('/');
@@ -30,8 +31,12 @@ const DropDown = ({name, image, open, status}) => {
         })
     }
 
+    const navigateToProfile = () => {
+        navigate(`/Profiles/You`, {state: {id: id}});
+    }
+
     return (
-        <div className={`absolute bg-[#111111] border-[1px] flex flex-col ${loading ? "items-center justify-center" : ""} border-neutral-700 top-0 h-screen right-0 py-4 px-3 rounded-xl transform ${
+        <div className={`absolute bg-[#111111] border-[1px] flex z-10 flex-col ${loading ? "items-center justify-center" : ""} border-neutral-700 top-0 h-screen right-0 py-4 px-3 rounded-xl transform ${
             status ? 'translate-x-0' : 'translate-x-full'
         } transition-transform duration-300 ease-in-out`}>
             {loading ? (
@@ -43,8 +48,8 @@ const DropDown = ({name, image, open, status}) => {
                 <>
                     <div className = "flex flex-row items-center justify-between border-b-[1px] border-neutral-700 pb-6">
                         <div className = "flex flex-row items-center">
-                            {image !== null ? (
-                                <img src={image} className = "rounded-full w-7 h-7"/>
+                            {image && image !== "null" && image !== "" ? (
+                                <img src={'http://localhost/storage/' + image} className = "rounded-full w-7 h-7"/>
                             ) : (
                                 <FaRegUserCircle className = "w-7 h-7 text-neutral-700"/>
                             )}
@@ -53,7 +58,10 @@ const DropDown = ({name, image, open, status}) => {
                         <IoIosClose onClick = {open} className = "text-2xl text-neutral-400 cursor-pointer ml-28"/>
                     </div>
                     <div className = "flex flex-col justify-center py-4 gap-2 border-b-[1px] border-neutral-700">
-                        <div className = "flex flex-row text-neutral-400 rounded-lg p-1 items-center cursor-pointer hover:bg-neutral-800 transition duration-200">
+                        <div
+                            className = "flex flex-row text-neutral-400 rounded-lg p-1 items-center cursor-pointer hover:bg-neutral-800 transition duration-200"
+                            onClick = {navigateToProfile}
+                        >
                             <FiUser className = "w-5 h-5 mr-2 text-neutral-400"/>
                             <h1 className = "text-md">Your profile</h1>
                         </div>
@@ -75,7 +83,10 @@ const DropDown = ({name, image, open, status}) => {
                         </div>
                     </div>
                     <div className = "flex flex-col justify-center py-4 gap-2 border-b-[1px]  border-neutral-700">
-                        <div className = "flex flex-row text-neutral-400 items-center rounded-lg p-1 cursor-pointer hover:bg-neutral-800 transition duration-200">
+                        <div
+                            className = "flex flex-row text-neutral-400 items-center rounded-lg p-1 cursor-pointer hover:bg-neutral-800 transition duration-200"
+                            onClick = {() => navigate('/settings')}
+                        >
                             <CiSettings className = "w-5 h-5 mr-2 text-neutral-400"/>
                             <h1 className = "text-md">Settings</h1>
                         </div>

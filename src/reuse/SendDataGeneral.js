@@ -1,15 +1,16 @@
 import axios from "axios";
 
 const sendDataGeneral = async (data, api, loading) => {
-    await axios.post(
-        api,
-        {...data},
-        {
-            header:{
-                accept: 'application/json',
+    try {
+        const response = await axios.post(api, data, {
+            headers: {
+                'Accept': 'application/json',
             },
-        }
-    )
+        });
+        return response;
+    } catch (error) {
+        throw error;
+    }
 }
 
 export default sendDataGeneral;

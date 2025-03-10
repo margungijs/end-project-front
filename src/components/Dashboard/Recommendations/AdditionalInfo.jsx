@@ -1,15 +1,22 @@
 import React from 'react';
-import Image from "../../../assets/images/7195ce2c8612cffa80b20ebf756d99c7.jpg";
+import { FaRegUserCircle } from "react-icons/fa";
 
 const AdditionalInfo = () => {
+    const image = localStorage.getItem('image');
+    const name = localStorage.getItem('name');
+
     return (
-        <div className = "flex flex-col w-1/2 bg-[#111111] rounded-lg p-4 border-[1px] border-neutral-700">
+        <div className = "flex flex-col lg:w-1/2 w-full bg-[#111111] rounded-lg p-4">
             <h1 className = "text-neutral-200 mb-2">Additional info</h1>
             <h1 className = "text-neutral-600 mb-2">Introduce yourself with some basic additional info like a bio, your age and location</h1>
-            <div className = "flex flex-col rounded-md border-[1px] border-neutral-700">
-                <div className = "bg-neutral-900 flex rounded-t-md flex-row p-2 border-b-[1px] border-neutral-700">
-                    <img src={Image} className = "w-6 h-6 rounded-full mr-2 "/>
-                    <h1 className = "text-neutral-200">Margungijs->Profile</h1>
+            <div className = "flex flex-col rounded-md">
+                <div className = "bg-neutral-950 flex rounded-t-md flex-row p-2 border-b-[1px] border-neutral-800">
+                    {image && image !== "null" && image !== "" ? (
+                        <img src={`http://localhost/storage/${image}`} alt="" className="w-6 h-6 rounded-full mr-2" />
+                    ) : (
+                        <FaRegUserCircle className="w-6 h-6 text-neutral-700 mr-2" />
+                    )}
+                    <h1 className = "text-neutral-200">{name}->Profile</h1>
                 </div>
                 <div className = "bg-neutral-950 flex flex-col rounded-b-md p-2 gap-1">
                     <h1 className = "text-neutral-600">Bio: ...</h1>
