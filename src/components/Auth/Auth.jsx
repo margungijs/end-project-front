@@ -4,7 +4,7 @@ import {HandleInputChange} from "../../reuse/HandleInputChange";
 import {errorCheck, touched} from "../../assets/Validations";
 import SendData from "../../reuse/SendData";
 import {OrbitProgress} from "react-loading-indicators";
-import {API_URL} from "../../config";
+import { API_URL } from "../../config";
 
 const Auth = () => {
     const navigate = useNavigate();
@@ -47,7 +47,7 @@ const Auth = () => {
         if(!errorCheck(error)){
             setBError(false);
             SendData(
-                login, `${API_URL}/login`, isLoading
+                login, `${ API_URL }/login`, isLoading
             ).then(response => {
                 stopLoading();
                 if(!response){
