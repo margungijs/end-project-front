@@ -12,7 +12,6 @@ const SendData = async (data, api, loading) => {
 
     if (!csrfToken) {
         console.error('CSRF token not found');
-        return;
     }
 
     await axios.post(
