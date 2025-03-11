@@ -18,7 +18,7 @@ function App() {
     useEffect(() => {
         axios.defaults.withCredentials = true;
         axios.defaults.withXSRFToken = true;
-    });
+    }, []);
 
     return (
         <Routes>

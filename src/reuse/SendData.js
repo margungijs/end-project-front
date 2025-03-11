@@ -16,18 +16,11 @@ const SendData = async (data, api, loading) => {
         {...data},
         {
             header:{
-                accept: 'application/json',
-                'X-XSRF-TOKEN': getCookie('XSRF-TOKEN'),
+                accept: 'application/json'
             },
             withCredentials: true
         }
     )
-
-    function getCookie(name) {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(';').shift();
-    }
 };
 
 export default SendData;
