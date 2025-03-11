@@ -6,6 +6,7 @@ import {IoMdArrowDropdown} from "react-icons/io";
 import axios from "axios";
 import {FaRegUserCircle} from "react-icons/fa";
 import sendDataGeneral from "../../../reuse/SendDataGeneral";
+import { API_URL } from "../../../config";
 
 const GeneralMain = () => {
     const name = localStorage.getItem('name');
@@ -115,7 +116,7 @@ const GeneralMain = () => {
         formData.append('image', file);
 
         try {
-            const response = await axios.post('http://localhost/api/authenticated/image', formData, {
+            const response = await axios.post(`${API_URL}/api/authenticated/image`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Accept': 'application/json',
@@ -133,7 +134,7 @@ const GeneralMain = () => {
 
     const fetchData = async () => {
         try {
-            const response = await axios.get('http://localhost/api/authenticated/user');
+            const response = await axios.get(`${ API_URL }/api/authenticated/user`);
             console.log(response)
             setUser(response.data.user);
             setValue(response.data.user.post_limit.limit);
@@ -171,7 +172,7 @@ const GeneralMain = () => {
         setIsChanging(false)
 
         try{
-            const response = await sendDataGeneral(data, 'http://localhost/api/authenticated/edit');
+            const response = await sendDataGeneral(data, `${ API_URL }/api/authenticated/edit`);
             console.log(response)
         }catch (error){
             console.log(error)
@@ -187,7 +188,7 @@ const GeneralMain = () => {
                         selectedImage ? (
                             <img src={selectedImage} className="w-full h-full rounded-full"/>
                         ) : (
-                            <img src={"http://localhost/storage/" + user.image} className="w-full h-full rounded-full"/>
+                            <img src={`${API_URL}/storage/` + user.image} className="w-full h-full rounded-full"/>
                         )
                     ) : (
                         selectedImage ? (

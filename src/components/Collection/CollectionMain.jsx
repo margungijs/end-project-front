@@ -3,6 +3,7 @@ import DashboardHeader from "../Dashboard/Main/DashboardHeader";
 import CollectionFilter from "./CollectionFilter";
 import FetchData from "../../reuse/FetchData";
 import CollectionOutput from "./CollectionOutput";
+import {API_URL} from "../../config";
 
 const CollectionMain = () => {
     const [selected, setSelected] = useState(0);
@@ -10,7 +11,7 @@ const CollectionMain = () => {
 
     const fetch = async () => {
         try{
-            const response = await FetchData('http://localhost/api/authenticated/collection');
+            const response = await FetchData(`${API_URL}/api/authenticated/collection`);
             setCollection(response.items)
             console.log(response.items)
         }catch (error){

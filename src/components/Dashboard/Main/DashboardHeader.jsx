@@ -5,6 +5,7 @@ import DropDown from "./DropDown";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FaUserFriends } from "react-icons/fa";
 import { MdOutlineSwitchAccessShortcutAdd } from "react-icons/md";
+import {API_URL} from "../../../config";
 
 const DashboardHeader = ({ profile, open, sideBar, sideCurrent }) => {
     const name = localStorage.getItem('name');
@@ -41,7 +42,7 @@ const DashboardHeader = ({ profile, open, sideBar, sideCurrent }) => {
                     <FaPlus className="text-neutral-700" />
                 </div>
                 {image && image !== "null" && image !== "" ? (
-                    <img src={"http://localhost/storage/" + image} onClick={profile} className="rounded-full w-8 h-8 cursor-pointer" />
+                    <img src={`${API_URL}/storage/` + image} onClick={profile} className="rounded-full w-8 h-8 cursor-pointer" />
                 ) : (
                     <FaRegUserCircle onClick={profile} className="w-8 h-8 text-neutral-700 cursor-pointer" />
                 )}

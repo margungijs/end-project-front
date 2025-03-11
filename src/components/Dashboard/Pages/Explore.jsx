@@ -3,13 +3,14 @@ import FetchData from "../../../reuse/FetchData";
 import FriendPost from "../Posts/FriendPost";
 import FriendTemplate from "../Posts/FriendTemplate";
 import SendDataGeneral from "../../../reuse/SendDataGeneral";
+import {API_URL} from "../../../config";
 
 const Explore = () => {
     const [explore, setExplore] = useState([]);
 
     const fetch = async () => {
         try{
-            const response = await FetchData('http://localhost/api/authenticated/explore');
+            const response = await FetchData(`${API_URL}/api/authenticated/explore`);
             setExplore(response.items)
             console.log(response.items)
         }catch (error){
@@ -23,7 +24,7 @@ const Explore = () => {
 
     const likePost = async (id) => {
         try{
-            const response = await SendDataGeneral({id: id}, 'http://localhost/api/authenticated/postLike');
+            const response = await SendDataGeneral({id: id}, `${API_URL}/api/authenticated/postLike`);
             console.log(response)
         }catch(error){
             console.log(error)
@@ -32,7 +33,7 @@ const Explore = () => {
 
     const likeTemplate = async (id) => {
         try{
-            const response = await SendDataGeneral({id: id}, 'http://localhost/api/authenticated/templateLike');
+            const response = await SendDataGeneral({id: id}, `${API_URL}/api/authenticated/templateLike`);
             console.log(response)
         }catch(error){
             console.log(error)

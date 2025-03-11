@@ -11,6 +11,7 @@ import {FaRegUserCircle} from "react-icons/fa";
 import {BsStars} from "react-icons/bs";
 import {GoTriangleDown} from "react-icons/go";
 import { useLocation } from "react-router-dom";
+import {API_URL} from "../../config";
 
 const PostMain = () => {
     const location = useLocation();
@@ -34,7 +35,7 @@ const PostMain = () => {
 
     const fetchData = async () => {
         try{
-            const response = await FetchData('http://localhost/api/authenticated/templates');
+            const response = await FetchData(`${API_URL}/api/authenticated/templates`);
             setTemplates(response.templates)
             const initialTemplate = response.templates.find(template => template.id === 1);
             if (initialTemplate) {
@@ -99,7 +100,7 @@ const PostMain = () => {
 
 
         try {
-            const response = await axios.post('http://localhost/api/authenticated/postImage', formData, {
+            const response = await axios.post(`${API_URL}/api/authenticated/postImage`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Accept': 'application/json',
@@ -120,7 +121,7 @@ const PostMain = () => {
         }
 
         try{
-            const response = await SendDataGeneral(combinedArray, 'http://localhost/api/authenticated/post');
+            const response = await SendDataGeneral(combinedArray, `${API_URL}/api/authenticated/post`);
             const postId = response.data.id;
             console.log(response)
 
@@ -291,7 +292,7 @@ const PostMain = () => {
                         <div className = "flex flex-col bg-neutral-950 h-fit p-4 rounded-lg">
                             <div className = "flex flex-row items-center">
                                 {userImage && userImage !== "null" && userImage !== "" ? (
-                                    <img src={"http://localhost/storage/" + userImage} className = "w-8 h-8 rounded-full mr-2"/>
+                                    <img src={`${API_URL}/storage/` + userImage} className = "w-8 h-8 rounded-full mr-2"/>
                                 ) : (
                                     <FaRegUserCircle className = "w-8 h-8 text-neutral-700 mr-2"/>
                                 )}
@@ -303,7 +304,7 @@ const PostMain = () => {
                             <div className = "flex flex-row bg-neutral-900 items-center rounded-md p-4 justify-between">
                                 <div className = "flex flex-row">
                                     {userImage && userImage !== "null" && userImage !== "" ? (
-                                        <img src={"http://localhost/storage/" + userImage} className = "w-6 h-6 rounded-full mr-2"/>
+                                        <img src={`${API_URL}/storage/` + userImage} className = "w-6 h-6 rounded-full mr-2"/>
                                     ) : (
                                         <FaRegUserCircle className = "w-6 h-6 text-neutral-700 mr-2"/>
                                     )}

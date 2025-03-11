@@ -4,6 +4,7 @@ import {HandleInputChange} from "../../reuse/HandleInputChange";
 import {errorCheck, touched, passwords} from "../../assets/Validations.jsx";
 import SendData from "../../reuse/SendData";
 import {OrbitProgress} from "react-loading-indicators";
+import {API_URL} from "../../config";
 
 const Register = () => {
     const navigate = useNavigate();
@@ -54,7 +55,7 @@ const Register = () => {
             }
             if(!errorCheck(error)){
                 SendData(
-                    register, "http://localhost/register", isLoading
+                    register, `${API_URL}/register`, isLoading
                 ).then(response => {
                     console.log(response)
                     stopLoading()

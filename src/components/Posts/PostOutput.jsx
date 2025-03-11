@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from "../../assets/images/placeholder.png";
+import {API_URL} from "../../config";
 
 const PostOutput = ({posts, limits, marks, chosenLimit}) => {
 
@@ -26,7 +27,7 @@ const PostOutput = ({posts, limits, marks, chosenLimit}) => {
                                             ) : (
                                                 <div
                                                     className="border-neutral-700 border-[1px] h-40 rounded-lg mb-4"
-                                                    style={{ backgroundImage: `url(http://localhost/storage/${post.image})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+                                                    style={{ backgroundImage: `url(${API_URL}/storage/${post.image})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
                                                 ></div>
                                             )}
                                             <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-200 rounded-lg">
@@ -69,7 +70,7 @@ const PostOutput = ({posts, limits, marks, chosenLimit}) => {
                                                 ) : (
                                                     <div
                                                         className="border-neutral-700 border-[1px] h-40 rounded-md mb-4"
-                                                        style={{ backgroundImage: `url(http://localhost/storage/${post.image})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+                                                        style={{ backgroundImage: `url(${API_URL}/storage/${post.image})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
                                                     ></div>
                                                 )}
                                                 <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-200 rounded-lg">

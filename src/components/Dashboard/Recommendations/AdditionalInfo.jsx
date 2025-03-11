@@ -1,5 +1,6 @@
 import React from 'react';
 import { FaRegUserCircle } from "react-icons/fa";
+import {API_URL} from "../../../config";
 
 const AdditionalInfo = () => {
     const image = localStorage.getItem('image');
@@ -12,7 +13,7 @@ const AdditionalInfo = () => {
             <div className = "flex flex-col rounded-md">
                 <div className = "bg-neutral-950 flex rounded-t-md flex-row p-2 border-b-[1px] border-neutral-800">
                     {image && image !== "null" && image !== "" ? (
-                        <img src={`http://localhost/storage/${image}`} alt="" className="w-6 h-6 rounded-full mr-2" />
+                        <img src={`${API_URL}/storage/${image}`} alt="" className="w-6 h-6 rounded-full mr-2" />
                     ) : (
                         <FaRegUserCircle className="w-6 h-6 text-neutral-700 mr-2" />
                     )}

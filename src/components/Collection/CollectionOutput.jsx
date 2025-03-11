@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from "../../assets/images/placeholder.png";
+import {API_URL} from "../../config";
 
 const CollectionOutput = ({selected, collection}) => {
 
@@ -27,7 +28,7 @@ const CollectionOutput = ({selected, collection}) => {
                                             ) : (
                                                 <div
                                                     className="h-40 rounded-lg mb-4"
-                                                    style={{ backgroundImage: `url(http://localhost/storage/${item.image})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+                                                    style={{ backgroundImage: `url(${API_URL}/storage/${item.image})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
                                                 ></div>
                                             )}
                                             <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-200 rounded-lg">

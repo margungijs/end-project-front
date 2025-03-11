@@ -3,6 +3,7 @@ import DashboardHeader from "../Dashboard/Main/DashboardHeader";
 import PostsFilter from "./PostsFilter";
 import FetchData from "../../reuse/FetchData";
 import PostOutput from "./PostOutput";
+import {API_URL} from "../../config";
 
 const PostsMain = () => {
     const [limits, setLimits] = useState([]);
@@ -11,7 +12,7 @@ const PostsMain = () => {
 
     const fetch = async () => {
         try{
-            const response = await FetchData('http://localhost/api/authenticated/fetchPosts');
+            const response = await FetchData(`${API_URL}/api/authenticated/fetchPosts`);
             console.log(response)
             setLimits(response.limits)
             setPosts(response.posts)

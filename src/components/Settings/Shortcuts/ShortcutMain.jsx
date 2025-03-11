@@ -6,6 +6,7 @@ import ShortcutConfiguration from "./ShortcutConfiguration";
 import ShortcutCustomisation from "./ShortcutCustomisation";
 import sendDataGeneral from "../../../reuse/SendDataGeneral";
 import { useLocation } from "react-router-dom";
+import { API_URL } from "../../../config";
 
 const ShortcutMain = () => {
     const location = useLocation();
@@ -25,7 +26,7 @@ const ShortcutMain = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost/api/authenticated/shortcuts');
+                const response = await axios.get(`${API_URL}/api/authenticated/shortcuts`);
                 setShortcuts(response.data.shortcuts);
                 console.log(response.data.shortcuts);
             } catch (error) {
@@ -40,7 +41,7 @@ const ShortcutMain = () => {
         setRequestError(false)
         try {
             sendDataGeneral(
-                newShortcut, 'http://localhost/api/authenticated/shortcut'
+                newShortcut, `${API_URL}/api/authenticated/shortcut`
             ).then(response => {
                 setNewShortcut({
                     name: "",

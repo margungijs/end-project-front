@@ -5,19 +5,20 @@ import { FaRegMessage } from "react-icons/fa6";
 import SendDataGeneral from "../../../reuse/SendDataGeneral.js";
 import {useNavigate} from "react-router-dom";
 import {FaRegUserCircle} from "react-icons/fa";
+import {API_URL} from "../../../config";
 
 const Friends = ({ friends, requests, setRequests, fetch, show}) => {
     const allFriends = [...(friends.friends || []), ...(friends.friends1 || [])];
     const navigate = useNavigate();
 
     const acceptRequest = async (id) => {
-        await SendDataGeneral({user_id: id}, 'http://localhost/api/authenticated/friendAccept');
+        await SendDataGeneral({user_id: id}, `${API_URL}/api/authenticated/friendAccept`);
         setRequests(requests.filter(request => request.user_id !== id));
         fetch();
     }
 
     const declineRequest = async (id) => {
-        await SendDataGeneral({user_id: id}, 'http://localhost/api/authenticated/removeFriend');
+        await SendDataGeneral({user_id: id}, `${API_URL}/api/authenticated/removeFriend`);
         setRequests(requests.filter(request => request.user_id !== id));
     }
 
@@ -42,7 +43,7 @@ const Friends = ({ friends, requests, setRequests, fetch, show}) => {
                         allFriends.map((friend, index) => (
                             <div key={index} className="flex flex-row bg-[#111111] border-[1px] p-2 border-neutral-700 rounded-md items-center mb-2">
                                 {friend.image !== null ? (
-                                    <img src={"http://localhost/storage/" + friend.image} className = "w-10 h-10 rounded-full mr-2"/>
+                                    <img src={`${API_URL}/storage/` + friend.image} className = "w-10 h-10 rounded-full mr-2"/>
                                 ) : (
                                     <FaRegUserCircle className = "w-10 h-10 text-neutral-700 mr-2"/>
                                 )}

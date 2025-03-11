@@ -11,6 +11,7 @@ import Shortcuts from "./Shortcuts";
 import Friends from "./Friends";
 import YourFeed from "../Pages/YourFeed";
 import Explore from "../Pages/Explore";
+import {API_URL} from "../../../config";
 
 const Dashboard = () => {
     const [data, setData] = useState({});
@@ -23,7 +24,7 @@ const Dashboard = () => {
 
     const fetchData = async () => {
         try {
-            const response = await axios.get('http://localhost/api/authenticated/user');
+            const response = await axios.get(`${API_URL}/api/authenticated/user`);
             console.log(response.data.user)
             setData(response.data.user);
             setShortcuts(response.data.user.shortcuts);

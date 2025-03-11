@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {IoMdArrowDropdown} from "react-icons/io";
 import FetchData from "../../../reuse/FetchData";
+import { API_URL } from "../../../config";
 
 const ShortcutConfiguration = ({ newRoute }) => {
     const [dropdown, setDropdown] = useState(false);
@@ -11,7 +12,7 @@ const ShortcutConfiguration = ({ newRoute }) => {
 
     const fetch = async () => {
         try{
-            const response = await FetchData('http://localhost/api/authenticated/user');
+            const response = await FetchData(`${API_URL}/api/authenticated/user`);
             console.log(response)
             setFriends([...response.user.friends_as_friend, ...response.user.friends_as_user])
         }catch (error){

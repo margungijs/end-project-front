@@ -10,6 +10,7 @@ import { BsStars, BsCollection } from "react-icons/bs";
 import SendData from "../../../reuse/SendData";
 import {OrbitProgress} from "react-loading-indicators";
 import {useNavigate} from "react-router-dom";
+import {API_URL} from "../../../config";
 
 const DropDown = ({name, image, open, status}) => {
     const [loading, setLoading] = useState(false);
@@ -22,7 +23,7 @@ const DropDown = ({name, image, open, status}) => {
 
     const handleLogOut = () => {
         SendData(
-            null, "http://localhost/logout", () => setLoading(true)
+            null, `${API_URL}/logout`, () => setLoading(true)
         ).then(response => {
             console.log(response)
             handleRedirect()
@@ -49,7 +50,7 @@ const DropDown = ({name, image, open, status}) => {
                     <div className = "flex flex-row items-center justify-between border-b-[1px] border-neutral-700 pb-6">
                         <div className = "flex flex-row items-center">
                             {image && image !== "null" && image !== "" ? (
-                                <img src={'http://localhost/storage/' + image} className = "rounded-full w-7 h-7"/>
+                                <img src={`${API_URL}/storage/` + image} className = "rounded-full w-7 h-7"/>
                             ) : (
                                 <FaRegUserCircle className = "w-7 h-7 text-neutral-700"/>
                             )}

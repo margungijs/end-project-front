@@ -4,6 +4,7 @@ import { GoTriangleDown } from "react-icons/go";
 import {FaRegUserCircle} from "react-icons/fa";
 import {PiStarFourFill} from "react-icons/pi";
 import templateImage from "../../../assets/images/placeholder.png"
+import {API_URL} from "../../../config";
 
 const FriendTemplate = ({name, image, title, date, questions, description, like, liked}) => {
     const [open, setOpen] = useState(false);
@@ -13,7 +14,7 @@ const FriendTemplate = ({name, image, title, date, questions, description, like,
         <div className = "flex flex-col bg-[#111111] p-4 rounded-lg">
             <div className = "flex flex-row items-center">
                 {image !== null ? (
-                    <img src={"http://localhost/storage/" + image} className = "w-8 h-8 rounded-full mr-2"/>
+                    <img src={`${API_URL}/storage/` + image} className = "w-8 h-8 rounded-full mr-2"/>
                 ) : (
                     <FaRegUserCircle className = "w-8 h-8 text-neutral-700 mr-2"/>
                 )}
@@ -25,7 +26,7 @@ const FriendTemplate = ({name, image, title, date, questions, description, like,
             <div className = "flex flex-row bg-neutral-900 items-center rounded-md p-4 justify-between">
                 <div className = "flex flex-row items-center">
                     {image !== null ? (
-                        <img src={"http://localhost/storage/" + image} className = "w-6 h-6 rounded-full mr-2"/>
+                        <img src={`${API_URL}/storage/` + image} className = "w-6 h-6 rounded-full mr-2"/>
                     ) : (
                         <FaRegUserCircle className = "w-6 h-6 text-neutral-700 mr-2"/>
                     )}                    <h1 className = "text-neutral-200">{name}: {title}</h1>

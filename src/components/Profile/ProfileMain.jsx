@@ -10,6 +10,7 @@ import Post from "./Post.jsx";
 import DashboardHeader from "../Dashboard/Main/DashboardHeader";
 import Template from "./Template.jsx";
 import SendDataGeneral from "../../reuse/SendDataGeneral";
+import {API_URL} from "../../config";
 
 const ProfileMain = () => {
     const location = useLocation();
@@ -20,7 +21,7 @@ const ProfileMain = () => {
 
 
     const fetchData = async () => {
-        FetchData('http://localhost/api/authenticated/getUser/' + id)
+        FetchData(`${API_URL}/api/authenticated/getUser/` + id)
             .then(response => {
                 console.log(response)
                 setUser(response);
@@ -39,7 +40,7 @@ const ProfileMain = () => {
 
     const sendFriend = async () => {
         try{
-            const response = await SendDataGeneral({friend_id: id}, 'http://localhost/api/authenticated/friendAdd');
+            const response = await SendDataGeneral({friend_id: id}, `${API_URL}/api/authenticated/friendAdd`);
             setSent(true);
         }catch (error){
             console.log(error)
@@ -52,7 +53,7 @@ const ProfileMain = () => {
             {user.user.image == null ? (
                 <FaRegUserCircle className = "w-40 h-40 mt-10 text-neutral-700 mb-2"/>
             ) : (
-                <img src={'http://localhost/storage/' + user.user.image} className = "w-40 h-40 mt-10 rounded-full mb-2"/>
+                <img src={`${API_URL}/storage/` + user.user.image} className = "w-40 h-40 mt-10 rounded-full mb-2"/>
             )}
             <div className = "flex flex-row gap-2 items-center mb-4">
                 <h1 className = "text-3xl text-neutral-200">{user.user.name}</h1>

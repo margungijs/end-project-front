@@ -11,6 +11,7 @@ import friend from "./Friend";
 import {useLocation} from "react-router-dom";
 import MessageStatic from "./MessageStatic";
 import {FaRegUserCircle} from "react-icons/fa";
+import {API_URL} from "../../config";
 
 const MessageMain = () => {
     const location = useLocation();
@@ -36,7 +37,7 @@ const MessageMain = () => {
 
     const fetchConversationHistory = async () => {
         try{
-            const response = await FetchData(`http://localhost/api/authenticated/messages/${friendID}`)
+            const response = await FetchData(`${API_URL}/api/authenticated/messages/${friendID}`)
             setConversationHistory(response);
         }catch (error){
             console.log(error)
@@ -76,7 +77,7 @@ const MessageMain = () => {
                 message: message,
                 [sendFriendID === -1 ? 'user_id' : 'friend_id']: friendID
             };
-            const response = await SendDataGeneral(payload,'http://localhost/api/authenticated/sendMessage');
+            const response = await SendDataGeneral(payload,`${API_URL}/api/authenticated/sendMessage`);
             setMessage('');
         }catch (error){
             console.log(error)
@@ -93,7 +94,7 @@ const MessageMain = () => {
                         {currentFriend && (
                             <div className = "z-10 bg-[#111111] items-center p-2 flex flex-row w-full border-[1px] border-neutral-700 rounded-md">
                                 {currentFriend.image !== null ? (
-                                    <img src={'http://localhost/storage/' + currentFriend.image} className = "w-10 h-10 rounded-full mr-2"/>
+                                    <img src={`${API_URL}/storage/` + currentFriend.image} className = "w-10 h-10 rounded-full mr-2"/>
                                 ) : (
                                     <FaRegUserCircle className = "w-10 h-10 text-neutral-700 mr-2"/>
                                 )}

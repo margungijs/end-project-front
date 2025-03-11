@@ -9,6 +9,7 @@ import {GoTriangleDown} from "react-icons/go";
 import {PiStarFourFill} from "react-icons/pi";
 import Image from "../../assets/images/placeholder.png";
 import { IoDocumentTextOutline } from "react-icons/io5";
+import { API_URL } from "../../config";
 
 const TemplateMain = () => {
     const [questions, setQuestions] = useState([""]);
@@ -59,7 +60,7 @@ const TemplateMain = () => {
         };
         console.log(combinedArray);
 
-        SendDataGeneral(combinedArray, 'http://localhost/api/authenticated/template')
+        SendDataGeneral(combinedArray, `${API_URL}/api/authenticated/template`)
             .then(response => {
                 console.log(response);
                 setSuccess(true);
@@ -186,7 +187,7 @@ const TemplateMain = () => {
                         <div className = "flex flex-col w-full bg-[#111111] p-4 h-fit rounded-lg border-[1px] border-neutral-700">
                             <div className = "flex flex-row items-center">
                                 {userImage && userImage !== "null" && userImage !== "" ? (
-                                    <img src={"http://localhost/storage/" + userImage} className = "w-8 h-8 rounded-full mr-2"/>
+                                    <img src={`${API_URL}/storage/` + userImage} className = "w-8 h-8 rounded-full mr-2"/>
                                 ) : (
                                     <FaRegUserCircle className = "w-8 h-8 text-neutral-700 mr-2"/>
                                 )}
@@ -198,7 +199,7 @@ const TemplateMain = () => {
                             <div className = "flex flex-row bg-neutral-900 border-[1px] items-center border-neutral-700 rounded-md p-4 justify-between">
                                 <div className = "flex flex-row">
                                     {userImage && userImage !== "null" && userImage !== "" ? (
-                                        <img src={"http://localhost/storage/" + userImage} className = "w-6 h-6 rounded-full mr-2"/>
+                                        <img src={`${API_URL}/storage/` + userImage} className = "w-6 h-6 rounded-full mr-2"/>
                                     ) : (
                                         <FaRegUserCircle className = "w-6 h-6 text-neutral-700 mr-2"/>
                                     )}

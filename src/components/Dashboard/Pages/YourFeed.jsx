@@ -4,13 +4,14 @@ import FriendPost from "../Posts/FriendPost";
 import FriendTemplate from "../Posts/FriendTemplate";
 import SendDataGeneral from "../../../reuse/SendDataGeneral";
 import SendData from "../../../reuse/SendData";
+import {API_URL} from "../../../config";
 
 const YourFeed = () => {
     const [feed, setFeed] = useState([])
 
     const fetch = async () => {
         try{
-            const response = await FetchData('http://localhost/api/authenticated/feed');
+            const response = await FetchData(`${API_URL}/api/authenticated/feed`);
             setFeed(response.items)
             console.log(response.items)
         }catch (error){
@@ -24,7 +25,7 @@ const YourFeed = () => {
 
     const likePost = async (id) => {
         try{
-            const response = await SendDataGeneral({id: id}, 'http://localhost/api/authenticated/postLike');
+            const response = await SendDataGeneral({id: id}, `${API_URL}/api/authenticated/postLike`);
             console.log(response)
         }catch(error){
             console.log(error)
@@ -33,7 +34,7 @@ const YourFeed = () => {
 
     const likeTemplate = async (id) => {
         try{
-            const response = await SendDataGeneral({id: id}, 'http://localhost/api/authenticated/templateLike');
+            const response = await SendDataGeneral({id: id}, `${API_URL}/api/authenticated/templateLike`);
             console.log(response)
         }catch(error){
             console.log(error)

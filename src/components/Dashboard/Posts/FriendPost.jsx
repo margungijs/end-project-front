@@ -6,6 +6,7 @@ import { PiStarFourFill } from "react-icons/pi";
 import { CSSTransition } from 'react-transition-group';
 import Image from "../../../assets/images/placeholder.png";
 import {useNavigate} from "react-router-dom";
+import {API_URL} from "../../../config";
 
 const FriendPost = ({name, image, title, date, template, answers, post_image, like, liked, user_id}) => {
     const [open, setOpen] = useState(false);
@@ -20,7 +21,7 @@ const FriendPost = ({name, image, title, date, template, answers, post_image, li
         <div className = "flex flex-col bg-[#111111] p-4 rounded-lg">
             <div className = "flex flex-row items-center">
                 {image !== null ? (
-                    <img src={"http://localhost/storage/" + image} className = "w-8 h-8 rounded-full mr-2"/>
+                    <img src={`${API_URL}/storage/` + image} className = "w-8 h-8 rounded-full mr-2"/>
                 ) : (
                     <FaRegUserCircle className = "w-8 h-8 text-neutral-700 mr-2"/>
                 )}
@@ -35,7 +36,7 @@ const FriendPost = ({name, image, title, date, template, answers, post_image, li
             <div className = "flex flex-row bg-neutral-900 items-center rounded-md p-4 justify-between">
                 <div className = "flex flex-row items-center">
                     {image !== null ? (
-                        <img src={"http://localhost/storage/" + image} className = "w-6 h-6 rounded-full mr-2"/>
+                        <img src={`${API_URL}/storage/` + image} className = "w-6 h-6 rounded-full mr-2"/>
                     ) : (
                         <FaRegUserCircle className = "w-6 h-6 text-neutral-700 mr-2"/>
                     )}
@@ -60,7 +61,7 @@ const FriendPost = ({name, image, title, date, template, answers, post_image, li
                         ) : (
                             <div
                                 className="h-40 rounded-lg mb-4"
-                                style={{ backgroundImage: `url(http://localhost/storage/${post_image})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+                                style={{ backgroundImage: `url(${API_URL}/storage/${post_image})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
                             ></div>
                         )}
                         {template.questions.map((question, index) => (

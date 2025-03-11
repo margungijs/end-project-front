@@ -1,5 +1,6 @@
 import React from 'react';
 import { FaRegUserCircle } from "react-icons/fa";
+import {API_URL} from "../../config";
 
 const Friend = ({name, image, id}) => {
     return (
@@ -9,7 +10,7 @@ const Friend = ({name, image, id}) => {
         >
             <div className = "flex flex-row items-center">
                 {image !== null ? (
-                    <img src={'http://localhost/storage/' + image} className = "w-10 h-10 rounded-full mr-2"/>
+                    <img src={`${API_URL}/storage/` + image} className = "w-10 h-10 rounded-full mr-2"/>
                 ) : (
                     <FaRegUserCircle className = "w-10 h-10 text-neutral-700 mr-2"/>
                 )}
