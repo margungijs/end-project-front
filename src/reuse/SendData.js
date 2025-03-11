@@ -16,7 +16,8 @@ const SendData = async (data, api, loading) => {
         {...data},
         {
             header:{
-                accept: 'application/json'
+                accept: 'application/json',
+                'X-XSRF-TOKEN': 'test',
             },
             withCredentials: true,
             withXSRFToken: true
