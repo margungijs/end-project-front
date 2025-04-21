@@ -8,9 +8,9 @@ const ShortcutCustomisation = ({ setIcon, icon, color, setColor, setHover, hover
     const [hDropdown, setHDropdown] = useState(false);
 
     return (
-        <div className="flex flex-row w-full gap-2 py-2 mb-4">
+        <div className="flex sm:flex-row flex-col w-full gap-2 py-2 mb-4">
             <div
-                className="border-[1px] relative flex cursor-pointer flex-row items-center gap-2 border-neutral-700 px-2 py-1 text-neutral-800 rounded-md"
+                className="relative flex cursor-pointer flex-row sm:w-auto w-full sm:items-center justify-between sm:gap-2 mr-auto px-2 py-1 text-neutral-800 rounded-md"
                 onClick={() => {setDropdown(!dropdown); setCDropdown(false); setHDropdown(false)}}
             >
                 {icon === 0 ? (
@@ -24,7 +24,7 @@ const ShortcutCustomisation = ({ setIcon, icon, color, setColor, setHover, hover
                     className={`text-neutral-600 transition-transform ${dropdown ? "rotate-180" : ""} duration-300 text-xl`}
                 />
                 <div
-                    className={`left-0 absolute bg-neutral-950 p-1 top-12 flex flex-col border-[1px] border-neutral-700 rounded-md 
+                    className={`left-0 absolute bg-neutral-950 z-10 p-1 top-12 flex flex-col rounded-md 
             transform transition-opacity duration-300 ease-out ${
                         dropdown ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2 pointer-events-none"
                     }`}
@@ -39,9 +39,9 @@ const ShortcutCustomisation = ({ setIcon, icon, color, setColor, setHover, hover
                     </div>
                 </div>
             </div>
-            <div className = "flex flex-row w-full gap-2">
+            <div className = "flex sm:flex-row flex-col w-full gap-2">
                 <div
-                    className = "border-[1px] relative w-1/2 flex cursor-pointer flex-row items-center justify-between gap-2 border-neutral-700 px-2 py-1 text-neutral-600 rounded-md"
+                    className = "relative sm:w-1/2 w-full flex cursor-pointer flex-row items-center justify-between gap-2 px-2 py-1 text-neutral-600 rounded-md"
                     onClick={() => {setCDropdown(!cDropdown); setHDropdown(false); setDropdown(false)}}
                 >
                     {color === "" ? (
@@ -53,7 +53,7 @@ const ShortcutCustomisation = ({ setIcon, icon, color, setColor, setHover, hover
                         className={`text-neutral-600 transition-transform ${cDropdown ? "rotate-180" : ""} duration-300 text-xl`}
                     />
                     <div
-                        className={`left-0 absolute bg-neutral-950 p-1 top-12 flex flex-col w-full border-[1px] border-neutral-700 rounded-md 
+                        className={`left-0 absolute z-10 bg-neutral-950 p-1 sm:top-12 top-8 flex flex-col w-full rounded-md 
                     transform transition-all duration-300 ease-out ${
                             cDropdown ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2 pointer-events-none"
                         }`}
@@ -62,28 +62,28 @@ const ShortcutCustomisation = ({ setIcon, icon, color, setColor, setHover, hover
                             <li
                                 className="hover:bg-neutral-900 rounded-md transition duration-200 p-1"
                                 onClick = {(e) => setColor(e.target.innerText)}
-                            >Green</li>
+                            >green</li>
                             <li
                                 className="hover:bg-neutral-900 rounded-md transition duration-200 p-1"
                                 onClick = {(e) => setColor(e.target.innerText)}
-                            >Blue</li>
+                            >blue</li>
                             <li
                                 className="hover:bg-neutral-900 rounded-md transition duration-200 p-1"
                                 onClick = {(e) => setColor(e.target.innerText)}
-                            >Red</li>
+                            >red</li>
                             <li
                                 className="hover:bg-neutral-900 rounded-md transition duration-200 p-1"
                                 onClick = {(e) => setColor(e.target.innerText)}
-                            >Purple</li>
+                            >purple</li>
                             <li
                                 className="hover:bg-neutral-900 rounded-md transition duration-200 p-1"
                                 onClick = {(e) => setColor(e.target.innerText)}
-                            >Yellow</li>
+                            >yellow</li>
                         </ul>
                     </div>
                 </div>
                 <div
-                    className = "border-[1px] relative w-1/2 flex cursor-pointer flex-row items-center justify-between gap-2 border-neutral-700 px-2 py-1 text-neutral-600 rounded-md"
+                    className = "relative sm:w-1/2 w-full flex cursor-pointer flex-row items-center justify-between gap-2 px-2 py-1 text-neutral-600 rounded-md"
                     onClick={() => {setHDropdown(!hDropdown); setCDropdown(false); setDropdown(false)}}
                 >
                     {hover === "" ? (
@@ -95,7 +95,7 @@ const ShortcutCustomisation = ({ setIcon, icon, color, setColor, setHover, hover
                         className={`text-neutral-600 transition-transform ${hDropdown ? "rotate-180" : ""} duration-300 text-xl`}
                     />
                     <div
-                        className={`left-0 absolute bg-neutral-950 p-1 top-12 flex flex-col w-full border-[1px] border-neutral-700 rounded-md 
+                        className={`left-0 absolute bg-neutral-950 p-1 z-10 sm:top-12 top-8 flex flex-col w-full rounded-md 
                     transform transition-all duration-300 ease-out ${
                             hDropdown ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2 pointer-events-none"
                         }`}
@@ -104,23 +104,23 @@ const ShortcutCustomisation = ({ setIcon, icon, color, setColor, setHover, hover
                             <li
                                 className="hover:bg-neutral-900 rounded-md transition duration-200 p-1"
                                 onClick = {(e) => setHover(e.target.innerText)}
-                            >Green</li>
+                            >green</li>
                             <li
                                 className="hover:bg-neutral-900 rounded-md transition duration-200 p-1"
                                 onClick = {(e) => setHover(e.target.innerText)}
-                            >Blue</li>
+                            >blue</li>
                             <li
                                 className="hover:bg-neutral-900 rounded-md transition duration-200 p-1"
                                 onClick = {(e) => setHover(e.target.innerText)}
-                            >Red</li>
+                            >red</li>
                             <li
                                 className="hover:bg-neutral-900 rounded-md transition duration-200 p-1"
                                 onClick = {(e) => setHover(e.target.innerText)}
-                            >Purple</li>
+                            >purple</li>
                             <li
                                 className="hover:bg-neutral-900 rounded-md transition duration-200 p-1"
                                 onClick = {(e) => setHover(e.target.innerText)}
-                            >Yellow</li>
+                            >yellow</li>
                         </ul>
                     </div>
                 </div>

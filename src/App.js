@@ -13,6 +13,9 @@ import PostMain from "./components/Post/PostMain";
 import MessageMain from "./components/Message/MessageMain";
 import PostsMain from "./components/Posts/PostsMain";
 import CollectionMain from "./components/Collection/CollectionMain";
+import SearchMain from "./components/Dashboard/SearchMain";
+import {AuthProvider} from "./AuthContext";
+import PrivateRoute from "./PrivateRoute";
 
 function App() {
     useEffect(() => {
@@ -21,19 +24,25 @@ function App() {
     }, []);
 
     return (
-        <Routes>
-            <Route path='/' element={<Landing />} />
-            <Route path='/register' element={<Register />} />
-            <Route path='/auth' element = {<Auth />} />
-            <Route path='/dashboard' element = {<Dashboard />} />
-            <Route path='/Settings' element = {<Settings />} />
-            <Route path='/Profiles/:username' element = {<ProfileMain />} />
-            <Route path = "/Template" element = {<TemplateMain />} />
-            <Route path = "/Post" element = {<PostMain />} />
-            <Route path = "/Message" element = {<MessageMain />} />
-            <Route path = "/Posts" element = {<PostsMain />} />
-            <Route path = "/Collection" element = {<CollectionMain />} />
-        </Routes>
+        <AuthProvider>
+            <Routes>
+                <Route path='/' element={<Landing />} />
+                <Route path='/register' element={<Register />} />
+                <Route path='/auth' element = {<Auth />} />
+
+                <Route element = {<PrivateRoute /> }>
+                    <Route path='/dashboard' element = {<Dashboard />} />
+                    <Route path='/Settings' element = {<Settings />} />
+                    <Route path='/Profiles/:username' element = {<ProfileMain />} />
+                    <Route path = "/Template" element = {<TemplateMain />} />
+                    <Route path = "/Post" element = {<PostMain />} />
+                    <Route path = "/Message" element = {<MessageMain />} />
+                    <Route path = "/Posts" element = {<PostsMain />} />
+                    <Route path = "/Collection" element = {<CollectionMain />} />
+                    <Route path = "/Search" element = { <SearchMain />} />
+                </Route>
+            </Routes>
+        </AuthProvider>
     )
 }
 

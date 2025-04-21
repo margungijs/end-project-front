@@ -28,6 +28,7 @@ const MessageMain = () => {
     const [sendFriendID, setSendFriendID] = useState(-1);
     const [sendUserID, setSendUserID] = useState(-1);
     const [currentFriend, setCurrentFriend] = useState(null);
+    const [open, setOpen] = useState(false);
 
     useEffect(() => {
         setSendUserID(key === 1 ? -1 : friendID);
@@ -49,7 +50,7 @@ const MessageMain = () => {
     }, [sendFriendID]);
 
     useEffect(() => {
-        const pusher = new Pusher('147ee83c6689abf60861', {
+        const pusher = new Pusher('29da91ef69dd6d53763e', {
             cluster: 'eu'
         });
 
@@ -86,7 +87,7 @@ const MessageMain = () => {
 
     return (
         <div className = "flex flex-col bg-[#111111] h-screen w-screen relative overflow-x-hidden">
-            <DashboardHeader />
+            <DashboardHeader profile={() => setOpen(!open)} open = {open}/>
             <div className = "flex flex-row p-4 h-full gap-2">
                 <MessageFriends setFriendID={setFriendID} setFriends={setFriends} friends = {friends} setFriendsDistinct={setFriendsDistinct}/>
                 {friendID ? (

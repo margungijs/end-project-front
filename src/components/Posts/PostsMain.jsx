@@ -9,6 +9,8 @@ const PostsMain = () => {
     const [limits, setLimits] = useState([]);
     const [chosenLimit, setChosenLimit] = useState(13);
     const [posts, setPosts] = useState([]);
+    const [open, setOpen] = useState(false);
+    const [show, setShow] = useState(false)
 
     const fetch = async () => {
         try{
@@ -43,9 +45,9 @@ const PostsMain = () => {
 
     return (
         <div className="bg-neutral-950 h-screen w-screen relative overflow-x-hidden">
-            <DashboardHeader />
-            <div className = "flex flex-row p-2 h-full w-full gap-2">
-                <PostsFilter limits = {limits} marks = {marks} setLimit = {setChosenLimit}/>
+            <DashboardHeader profile={() => setOpen(!open)} open = {open} colOpen={show} setOpen={setShow}/>
+            <div className = "flex flex-row p-2 md:gap-4 w-screen relative justify-end">
+                <PostsFilter limits = {limits} marks = {marks} setLimit = {setChosenLimit} show = {show}/>
                 <PostOutput posts = {posts} limits={limits} marks={marks} chosenLimit = {chosenLimit}/>
             </div>
         </div>

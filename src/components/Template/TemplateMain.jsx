@@ -9,7 +9,9 @@ import {GoTriangleDown} from "react-icons/go";
 import {PiStarFourFill} from "react-icons/pi";
 import Image from "../../assets/images/placeholder.png";
 import { IoDocumentTextOutline } from "react-icons/io5";
+import { useLocation } from "react-router-dom";
 import { API_URL } from "../../config";
+import TagSelector from "../Post/TagSelector";
 
 const TemplateMain = () => {
     const [questions, setQuestions] = useState([""]);
@@ -22,6 +24,9 @@ const TemplateMain = () => {
     const username = localStorage.getItem('name');
     const userImage = localStorage.getItem('image');
     const today = new Date();
+    const [open, setOpen] = useState(false);
+    const location = useLocation();
+    const [tags, setTags] = useState([]);
 
     const addQuestion = () => {
         if (questions[questions.length - 1] !== "" && questions.length < 4) {
@@ -56,7 +61,8 @@ const TemplateMain = () => {
         const combinedArray = {
             title: title,
             description: description,
-            questions: questions
+            questions: questions,
+            tags: tags
         };
         console.log(combinedArray);
 
@@ -70,11 +76,19 @@ const TemplateMain = () => {
             });
     };
 
+    useEffect(() => {
+        if (location.state?.title) {
+            setTitle(location.state.title);
+        }
 
+        if (location.state?.desc) {
+            setDescription(location.state.desc);
+        }
+    }, [location.state]);
 
     return (
         <div className="bg-[#111111] h-screen w-screen relative overflow-x-hidden">
-            <DashboardHeader />
+            <DashboardHeader profile={() => setOpen(!open)} open = {open}/>
             {success ? (
                 <div className="absolute top-16 w-full flex flex-col items-center justify-center h-screen">
                     <Confetti
@@ -83,11 +97,11 @@ const TemplateMain = () => {
                     />
                     <h1 className="text-2xl text-neutral-200 text-center mb-2">Template created successfully!</h1>
                     <h1 className="text-neutral-600 mb-4 text-center">Your template has been added to your collection and is ready to be used</h1>
-                    <div className="transition-all w-1/2 duration-300 overflow-hidden max-h-screen opacity-100">
-                        <div className="mt-2 flex flex-row bg-neutral-900 border-[1px] gap-2 border-neutral-700 rounded-md p-2">
-                            <div className="bg-[#111111] border-neutral-700 border-[1px] w-1/2 p-2 rounded-md">
+                    <div className="transition-all lg:w-1/2 w-full duration-300 overflow-hidden max-h-screen opacity-100">
+                        <div className="mt-2 flex md:flex-row flex-col bg-neutral-900 gap-2 rounded-md p-2">
+                            <div className="bg-[#111111] md:w-1/2 w-full p-2 rounded-md">
                                 <div
-                                    className="border-neutral-700 border-[1px] h-40 rounded-lg mb-4"
+                                    className="h-40 rounded-lg mb-4"
                                     style={{ backgroundImage: `url(${Image})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
                                 ></div>
                                 {questions.map((question, index) => (
@@ -102,7 +116,7 @@ const TemplateMain = () => {
                                     </div>
                                 ))}
                             </div>
-                            <div className="flex flex-col p-2 w-1/2 justify-between">
+                            <div className="flex flex-col p-2 md:w-1/2 w-full justify-between">
                                 <div className="flex flex-col gap-2">
                                     <h1 className="text-neutral-200 text-2xl">{title}</h1>
                                     <h1 className="text-neutral-600 text-md">{description}</h1>
@@ -113,46 +127,45 @@ const TemplateMain = () => {
                     </div>
                 </div>
             ) : (
-                <div className="flex flex-row gap-4 h-full p-10">
-
-                    <div className="flex flex-col w-1/2">
+                <div className="flex md:flex-row flex-col gap-4 sm:h-full h-fit md:p-8 sm:p-6 p-4">
+                    <div className="flex flex-col md:w-1/2 w-full">
                         <h1 className="text-2xl text-neutral-200 mb-2">Templates</h1>
-                        <h1 className="text-xl text-neutral-600 mb-4">Templates are a way you can express yourself better and more personally - make your own questions and create personalised posts that will express you better</h1>
+                        <h1 className="md:text-xl text-md text-neutral-600 mb-4">Templates are a way you can express yourself better and more personally - make your own questions and create personalised posts that will express you better</h1>
                         <div className="flex flex-row gap-2 mb-2">
                             <div className="flex flex-col w-1/2">
                                 <h1 className="text-xl text-neutral-200 mb-2">Template title</h1>
-                                <h1 className="text-md text-neutral-600">Choose a title that sums up your templates meaning</h1>
+                                <h1 className="md:text-md text-sm text-neutral-600">Choose a title that sums up your templates meaning</h1>
                             </div>
                             <div className="flex flex-col w-1/2">
                                 <h1 className="text-xl text-neutral-200 mb-2">Template description</h1>
-                                <h1 className="text-md text-neutral-600">Make a description that explains the meaning of your template further than the title</h1>
+                                <h1 className="md:text-md text-sm text-neutral-600">Make a description that explains the meaning of your template further than the title</h1>
                             </div>
                         </div>
                         <div className="flex flex-row gap-2 mb-4">
                             <input
                                 type="text"
-                                className="bg-[#111111] text-neutral-200 w-1/2 border-[1px] border-neutral-700 rounded-md placeholder-neutral-600 indent-2 py-1 focus:outline-none focus:ring-[1px] focus:ring-neutral-200 transition duration-200"
+                                className="bg-neutral-950 truncate text-neutral-200 w-1/2 rounded-md placeholder-neutral-600 indent-2 py-1 focus:outline-none focus:ring-[1px] focus:ring-neutral-200 transition duration-200"
                                 placeholder="template title"
                                 onChange={(e) => setTitle(e.target.value)}
                                 value = {title}
                             />
                             <input
                                 type="text"
-                                className="bg-[#111111] text-neutral-200 w-1/2 border-[1px] border-neutral-700 rounded-md placeholder-neutral-600 indent-2 py-1 focus:outline-none focus:ring-[1px] focus:ring-neutral-200 transition duration-200"
+                                className="bg-neutral-950 truncate text-neutral-200 w-1/2 rounded-md placeholder-neutral-600 indent-2 py-1 focus:outline-none focus:ring-[1px] focus:ring-neutral-200 transition duration-200"
                                 placeholder="template description"
                                 onChange={(e) => setDescription(e.target.value)}
                                 value = {description}
                             />
                         </div>
-                        <h1 className="text-neutral-200 text-2xl mb-2">Template questions</h1>
-                        <h1 className="text-xl text-neutral-600 mb-4">Choose questions that you think matter to yourself and will help the self-reflection process</h1>
+                        <h1 className="text-neutral-200 md:text-2xl text-xl mb-2">Template questions</h1>
+                        <h1 className="md:text-xl text-md text-neutral-600 mb-4">Choose questions that you think matter to yourself and will help the self-reflection process</h1>
                         <div className="flex flex-col w-full">
                             {questions.map((question, index) => (
                                 <div className="flex flex-col w-full mb-2">
                                     <h1 className="text-neutral-200 text-xl mb-4">Question {index + 1}</h1>
                                     <input
                                         type="text"
-                                        className="bg-[#111111] text-neutral-200 w-full border-[1px] border-neutral-700 rounded-md placeholder-neutral-600 indent-2 py-1 focus:outline-none focus:ring-[1px] focus:ring-neutral-200 transition duration-200"
+                                        className="bg-neutral-950 text-neutral-200 w-full rounded-md placeholder-neutral-600 indent-2 py-1 focus:outline-none focus:ring-[1px] focus:ring-neutral-200 transition duration-200"
                                         placeholder={`Question ${index + 1}`}
                                         value={question}
                                         onChange={(e) => handleInputChange(index, e.target.value)}
@@ -173,6 +186,7 @@ const TemplateMain = () => {
                                     <h1 className = "text-neutral-200">Remove question</h1>
                                 </div>
                             </div>
+                            <TagSelector tags={tags} setTags={setTags}/>
                             {isFormComplete && (
                                 <div
                                     className = "bg-purple-600 mb-6 rounded-md transition duration-200 hover:bg-purple-700 cursor-pointer p-1 w-fit"
@@ -183,8 +197,8 @@ const TemplateMain = () => {
                             )}
                         </div>
                     </div>
-                    <div className = "w-1/2 flex justify-center items-center h-full gap-1">
-                        <div className = "flex flex-col w-full bg-[#111111] p-4 h-fit rounded-lg border-[1px] border-neutral-700">
+                    <div className = "md:w-1/2 w-full flex justify-center items-center h-full gap-1">
+                        <div className = "flex flex-col w-full bg-neutral-950 p-4 h-fit rounded-lg">
                             <div className = "flex flex-row items-center">
                                 {userImage && userImage !== "null" && userImage !== "" ? (
                                     <img src={`${API_URL}/storage/` + userImage} className = "w-8 h-8 rounded-full mr-2"/>
@@ -193,30 +207,30 @@ const TemplateMain = () => {
                                 )}
                                 <h1 className = "text-neutral-200 mr-1">{username}</h1>
                                 <IoDocumentTextOutline className = "text-neutral-200 mr-1"/>
-                                <h1 className = "text-neutral-600">made a new template</h1>
+                                <h1 className = "text-neutral-600 md:text-md text-sm">made a new template</h1>
                             </div>
                             <h1 className = "text-neutral-600 text-sm ml-10 mb-4">{today.toLocaleDateString()}</h1>
-                            <div className = "flex flex-row bg-neutral-900 border-[1px] items-center border-neutral-700 rounded-md p-4 justify-between">
-                                <div className = "flex flex-row">
+                            <div className = "flex flex-row bg-neutral-900 items-center rounded-md p-4 justify-between">
+                                <div className = "flex flex-row items-center">
                                     {userImage && userImage !== "null" && userImage !== "" ? (
                                         <img src={`${API_URL}/storage/` + userImage} className = "w-6 h-6 rounded-full mr-2"/>
                                     ) : (
                                         <FaRegUserCircle className = "w-6 h-6 text-neutral-700 mr-2"/>
                                     )}
-                                    <h1 className = "text-neutral-200">{username}->{title}</h1>
+                                    <h1 className = "text-neutral-200 md:text-md text-sm break-all">{username}:{title}</h1>
                                 </div>
                                 <div
-                                    className = "bg-neutral-900 hover:bg-neutral-800 transition duration-200 cursor-pointer rounded-md px-2 flex items-center flex-row py-1 border-[1px] border-neutral-700"
+                                    className = "bg-neutral-900 hover:bg-neutral-800 transition duration-200 cursor-pointer rounded-md px-2 sm:flex hidden items-center flex-row py-1"
                                 >
                                     <GoTriangleDown className = "text-neutral-600 mr-3 transition duration-200 rotate-180"/>
                                     <h1 className = "text-neutral-200 text-sm">View</h1>
                                 </div>
                             </div>
                             <div className="transition-all duration-300 overflow-hidden max-h-screen opacity-100">
-                                <div className="mt-2 flex flex-row bg-neutral-900 border-[1px] gap-2 border-neutral-700 rounded-md p-2">
-                                    <div className="bg-[#111111] border-neutral-700 border-[1px] w-1/2 p-2 rounded-md">
+                                <div className="mt-2 flex md:flex-row flex-col bg-neutral-900 gap-2 rounded-md p-2">
+                                    <div className="bg-[#111111] sm:w-1/2 w-full p-2 rounded-md">
                                         <div
-                                            className="border-neutral-700 border-[1px] h-40 rounded-lg mb-4"
+                                            className="h-40 rounded-lg mb-4"
                                             style={{ backgroundImage: `url(${Image})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
                                         ></div>
                                         {questions.map((question, index) => (
@@ -224,17 +238,25 @@ const TemplateMain = () => {
                                                 {question === "" ? (
                                                     <div className="h-3 rounded-md bg-neutral-400 mb-4 w-2/3 grow"></div>
                                                 ) : (
-                                                    <h1 className="text-neutral-200 text-xl mb-2">{question}</h1>
+                                                    <h1 className="text-neutral-200 md:text-xl text-md mb-2 break-all">{question}</h1>
                                                 )}
                                                 <div className = "h-2 rounded-md w-full bg-neutral-800 mb-1"></div>
                                                 <div className = "h-2 rounded-md w-1/2 bg-neutral-800 mb-1"></div>
                                             </div>
                                         ))}
                                     </div>
-                                    <div className="flex flex-col p-2 w-1/2 justify-between">
-                                        <div className="flex flex-col gap-2">
-                                            <h1 className="text-neutral-200 text-2xl">{title}</h1>
-                                            <h1 className="text-neutral-600 text-md">{description}</h1>
+                                    <div className="flex flex-col p-2 sm:w-1/2 w-full justify-between">
+                                        <div className="flex flex-col gap-2 mb-2">
+                                            <h1 className="text-neutral-200 md:text-2xl text-xl break-all">{title}</h1>
+                                            <h1 className="text-neutral-600 text-md break-all">{description}</h1>
+                                            <div className="flex flex-wrap gap-2 mt-2">
+                                                {tags?.map((tag) => (
+                                                    <span
+                                                        key={tag}
+                                                        className="text-neutral-500 text-sm font-medium"
+                                                    >#{tag}</span>
+                                                ))}
+                                            </div>
                                         </div>
                                         <PiStarFourFill className="w-10 h-10 text-neutral-700 cursor-pointer hover:text-yellow-500 transition duration-200"/>
                                     </div>

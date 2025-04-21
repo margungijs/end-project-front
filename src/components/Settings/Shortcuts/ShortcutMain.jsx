@@ -94,26 +94,30 @@ const ShortcutMain = () => {
         }
     }, [location.state])
 
+    const removeShortcut = (id) => {
+        setShortcuts((prevShortcuts) => prevShortcuts.filter(shortcut => shortcut.id !== id));
+    }
+
     return (
-        <div className = "flex flex-row w-3/4 gap-4">
-            <div className = "p-2 w-2/3 flex flex-col">
+        <div className = "flex flex-row lg:justify-end w-full md:gap-4">
+            <div className = "p-2 lg:pl-14 lg:w-1/2 md:w-2/3 w-full flex flex-col">
                 <h1 className = "text-neutral-200 text-2xl mb-2">Shortcut creation</h1>
                 <h1 className="text-neutral-600 mb-2 text-xl">Create personalised shortcuts throughout Chronicle - choose parts of Chronicle you want to access quicker and customise your shortcut</h1>
                 <h1 className = "text-neutral-200 text-xl mb-1">Name your shortcut</h1>
                 <h1 className = "text-neutral-600 text-md mb-2">Pick whatever name you want, it's your shortcut after all... but pick a unique name</h1>
-                <div className = "flex flex-row items-center py-2 gap-4 w-full mb-4">
-                    <div className = "flex flex-row w-1/2 items-center gap-2">
+                <div className = "flex sm:flex-row flex-col items-center py-2 gap-4 w-full mb-4">
+                    <div className = "flex flex-row sm:w-1/2 w-full items-center gap-2">
                         {image != "null" ? (
                             <img src={image} alt=""/>
                         ) : (
                             <FaRegUserCircle className = "w-8 h-8 text-neutral-700 cursor-pointer"/>
                         )}
-                        <h1 className = "text-neutral-200 text-md">{name}->Shortcuts->{newShortcut.name}</h1>
+                        <h1 className = "text-neutral-200 text-md break-all">{name}: Shortcuts: {newShortcut.name}</h1>
                     </div>
-                    <div className = "flex flex-row w-1/2 items-center">
+                    <div className = "flex flex-row sm:w-1/2 w-full items-center">
                         <input
                             type="text"
-                            className = "bg-[#111111] text-neutral-200 border-[1px] w-full border-neutral-700 rounded-md placeholder-neutral-600 indent-2 py-1 focus:outline-none focus:ring-[1px] focus:ring-neutral-200 transition duration-200"
+                            className = "bg-[#111111] truncate text-neutral-200 w-full rounded-md placeholder-neutral-600 indent-2 py-1 focus:outline-none focus:ring-[1px] focus:ring-neutral-200 transition duration-200"
                             placeholder = "shortcut name"
                             onChange={(e) => {
                                 setNewShortcut(prevState => ({
@@ -153,7 +157,7 @@ const ShortcutMain = () => {
                     </div>
                 )}
             </div>
-            <ShortcutPreview shortcuts={shortcuts} preview = {newShortcut}/>
+            <ShortcutPreview shortcuts={shortcuts} preview = {newShortcut} remove = {removeShortcut}/>
         </div>
     );
 };

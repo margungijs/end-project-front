@@ -7,7 +7,7 @@ const NewPost = () => {
     const navigate = useNavigate();
 
     return (
-        <div className = "bg-[#111111] flex flex-col rounded-lg p-4 lg:w-1/2 w-full">
+        <div className = "bg-[#111111] flex flex-col rounded-lg p-4 w-full">
             <h1 className = "text-neutral-200 mb-2">Make a new post</h1>
             <h1 className = "text-neutral-600 mb-2">Create a new post expressing what you've been up to the past few days - Feel free to use a template or make your own</h1>
             <div className = "flex flex-col mb-4">

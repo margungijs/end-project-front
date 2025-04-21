@@ -1,19 +1,73 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Logo from "../../../assets/images/final_final.png";
-import { FaRegUserCircle, FaPlus } from "react-icons/fa";
+import { FaRegUserCircle } from "react-icons/fa";
 import DropDown from "./DropDown";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FaUserFriends } from "react-icons/fa";
 import { MdOutlineSwitchAccessShortcutAdd } from "react-icons/md";
+import { FaFilter } from "react-icons/fa";
 import {API_URL} from "../../../config";
+import { CiSettings } from "react-icons/ci";
+import axios from 'axios';
+import FetchData from "../../../reuse/FetchData";
 
-const DashboardHeader = ({ profile, open, sideBar, sideCurrent }) => {
+const DashboardHeader = ({ profile, open, sideBar, sideCurrent, setOpen, colOpen }) => {
     const name = localStorage.getItem('name');
     const image = localStorage.getItem('image');
     const navigate = useNavigate();
     const location = useLocation();
+    const [search, setSearch] = useState('');
+    const [suggestions, setSuggestions] = useState([]);
+    const [showDropdown, setShowDropdown] = useState(false);
 
     const isDashboard = location.pathname === "/dashboard";
+    const isCollection = location.pathname === "/collection";
+    const isSettings = location.pathname.startsWith("/Settings");
+    const isPosts = location.pathname === "/Posts";
+
+    useEffect(() => {
+        const delayDebounce = setTimeout(async () => {
+            if (search.trim() !== '') {
+                try {
+                    const response = await FetchData(`${API_URL}/api/authenticated/search?query=${search}`);
+                    setSuggestions(response.results);
+                    setShowDropdown(true);
+                    console.log(response.results)
+                } catch (error) {
+                    console.error("Search error:", error);
+                    setSuggestions([]);
+                    setShowDropdown(false);
+                }
+            } else {
+                setSuggestions([]);
+                setShowDropdown(false);
+            }
+        }, 300);
+
+        return () => clearTimeout(delayDebounce);
+    }, [search]);
+
+    const navigateProfile = (name, id) => {
+        navigate('/Profiles/' + name, {state: {id}});
+    }
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            if (Object.keys(suggestions).length > 0) {
+                navigate('/search', {
+                    state: {
+                        query: search,
+                        suggestions,
+                        sections: Object.entries(suggestions)
+                            .filter(([_, items]) => Array.isArray(items) && items.length > 0)
+                            .map(([section]) => section)
+                    }
+                });
+                setShowDropdown(false);
+            }
+        }
+    };
+
 
     return (
         <div className="flex flex-row w-full bg-black py-4 px-6 text-neutral-200 justify-between items-center">
@@ -21,6 +75,99 @@ const DashboardHeader = ({ profile, open, sideBar, sideCurrent }) => {
                 <img src={Logo} onClick={() => navigate('/dashboard')} className="w-8 h-8 mr-4 cursor-pointer" />
                 <h1 className="mr-20 text-2xl md:block hidden">{name}</h1>
             </div>
+            <div className="relative w-1/3 md:w-1/2">
+                <input
+                    type="text"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    onFocus={() => {
+                        if (suggestions.length > 0) setShowDropdown(true);
+                    }}
+                    onBlur={() => setTimeout(() => setShowDropdown(false), 150)}
+                    onKeyDown={handleKeyDown}
+                    placeholder="Search..."
+                    className="bg-neutral-900 rounded-md px-4 py-1 text-sm text-neutral-200 focus:outline-none w-full"
+                />
+                {showDropdown && (
+                    <div className="absolute top-full left-0 w-full bg-neutral-900 rounded-md mt-1 shadow-lg z-50 max-h-96 overflow-y-auto">
+                        {Object.entries(suggestions).map(([category, items]) => (
+                            items.length > 0 && (
+                                <div key={category} className="border-b border-neutral-800 px-4 py-2">
+                                    <h2 className="text-xs uppercase text-neutral-500 mb-1">{category.replace('_', ' ')}</h2>
+                                    {items.map((item, index) => {
+                                        switch (category) {
+                                            case 'users':
+                                                return (
+                                                    <div
+                                                        key={index}
+                                                        className="flex items-center gap-2 py-1 hover:bg-neutral-800 cursor-pointer"
+                                                        onClick = {() => navigateProfile(item.name, item.id)}
+                                                    >
+                                                        {item.image ? (
+                                                            <img
+                                                            src={item.image ? `${API_URL}/storage/${item.image}` : '/default-avatar.png'}
+                                                            className="w-6 h-6 rounded-full"
+                                                            alt={item.name}
+                                                        />
+                                                        ) : (
+                                                            <FaRegUserCircle
+                                                                className="w-6 h-6 rounded-full text-neutral-600"
+                                                            />
+                                                        )}
+                                                        <span className="text-sm text-neutral-200">{item.name}</span>
+                                                    </div>
+                                                );
+                                            case 'posts':
+                                            case 'tagged_posts':
+                                                return (
+                                                    <div
+                                                        key={index}
+                                                        className="py-1 hover:bg-neutral-800 cursor-pointer"
+                                                        onClick={() => {
+                                                            navigate('/search', { state: { suggestions: { [category]: [item] } } });
+                                                            setShowDropdown(false);
+                                                        }}                                                    >
+                                                        <span className="text-sm text-neutral-200">{item.title}</span>
+                                                    </div>
+                                                );
+                                            case 'templates':
+                                            case 'tagged_templates':
+                                                return (
+                                                    <div
+                                                        key={index}
+                                                        className="py-1 hover:bg-neutral-800 cursor-pointer"
+                                                        onClick={() => {
+                                                            navigate('/search', { state: { suggestions: { [category]: [item] } } });
+                                                            setShowDropdown(false);
+                                                        }}                                                    >
+                                                        <span className="text-sm text-purple-400">{item.title}</span>
+                                                    </div>
+                                                );
+                                            case 'tags':
+                                                return (
+                                                    <div
+                                                        key={index}
+                                                        className="py-1 hover:bg-neutral-800 cursor-pointer"
+                                                        onClick={() => {
+                                                            navigate('/search', { state: { suggestions: { [category]: [item] } } });
+                                                            setShowDropdown(false);
+                                                        }}
+                                                    >
+                                                        <span className="text-sm text-blue-400">#{item.name.en}</span>
+                                                    </div>
+                                                );
+                                            default:
+                                                return null;
+                                        }
+                                    })}
+                                </div>
+                            )
+                        ))}
+                    </div>
+                )}
+
+            </div>
+
             <div className="flex flex-row items-center">
                 {isDashboard && (
                     <>
@@ -38,9 +185,22 @@ const DashboardHeader = ({ profile, open, sideBar, sideCurrent }) => {
                         </div>
                     </>
                 )}
-                <div className="w-8 h-8 rounded-lg border-[1px] mr-4 cursor-pointer border-neutral-700 flex items-center justify-center">
-                    <FaPlus className="text-neutral-700" />
-                </div>
+                {(isCollection || isPosts) && (
+                    <div
+                        className="w-8 h-8 rounded-lg border-[1px] mr-4 border-neutral-700 cursor-pointer md:hidden flex items-center justify-center"
+                        onClick={() => setOpen(!colOpen)}
+                    >
+                        <FaFilter className="text-neutral-700" />
+                    </div>
+                )}
+                {isSettings && (
+                    <div
+                        className="w-8 h-8 rounded-lg border-[1px] mr-4 border-neutral-700 cursor-pointer md:hidden flex items-center justify-center"
+                        onClick={() => setOpen(!colOpen)}
+                    >
+                        <CiSettings className="text-neutral-700" />
+                    </div>
+                )}
                 {image && image !== "null" && image !== "" ? (
                     <img src={`${API_URL}/storage/` + image} onClick={profile} className="rounded-full w-8 h-8 cursor-pointer" />
                 ) : (

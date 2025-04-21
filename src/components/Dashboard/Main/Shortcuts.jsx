@@ -4,23 +4,41 @@ import {GoStarFill} from "react-icons/go";
 import {FaMessage} from "react-icons/fa6";
 import {BsStars} from "react-icons/bs";
 import {useNavigate} from "react-router-dom";
+import {icons} from "../../../assets/IconChoices";
 
 const Shortcuts = ({ shortcuts, show }) => {
     const navigate = useNavigate();
+    const id = localStorage.getItem('id');
 
     const navigateProfile = (name, id) => {
         navigate('/Profiles/' + name, { state: { id } });
     };
 
+    const navigateShortcuts = (route, friend = null) => {
+        if(route === "Profile"){
+            navigate('/Profiles/You', {state: {id: id}})
+        }else if(route === "Settings"){
+            navigate('/settings')
+        }else if(/^\d+$/.test(route)){
+            navigate(`/Profiles/${friend}`, {state: {id: route}})
+        }else if (/^\d+msg$/.test(route)) {
+            const id = route.match(/^(\d+)msg$/)[1];
+            navigate('/Message', { state: { id: Number(id) } });
+        }
+    }
+
     return (
         <div
-            className={`h-full p-2 lg:w-1/4 w-full absolute left-0 top-0 bg-[#111111] py-8 px-6 transform transition-all duration-500 ease-in-out 
+            className={`h-full p-2 md:w-1/4 w-full absolute left-0 top-0 bg-[#111111] py-8 px-6 transform transition-all duration-500 ease-in-out 
         ${show === "shortcuts" ? "translate-x-0 opacity-100" : "-translate-x-full opacity-0"} 
         lg:translate-x-0 lg:opacity-100`}
         >
             <div className="flex flex-row justify-between items-center mb-8">
                 <h1 className="text-neutral-200 text-2xl">Shortcuts</h1>
-                <div className="bg-blue-600 rounded-lg flex flex-col items-center justify-center px-4 py-1 cursor-pointer hover:bg-blue-700 transition duration-300">
+                <div
+                    className="bg-blue-600 rounded-lg flex flex-col items-center justify-center px-4 py-1 cursor-pointer hover:bg-blue-700 transition duration-300"
+                    onClick = {() => navigate('/Settings?section=shortcuts')}
+                >
                     <h1 className="text-white">New</h1>
                 </div>
             </div>
@@ -48,16 +66,12 @@ const Shortcuts = ({ shortcuts, show }) => {
             </div>
             {shortcuts.map((shortcut, index) => (
                 <div
-                    className={`flex flex-row items-center cursor-pointer text-neutral-200 hover:text-${shortcut.customisation.color_hover}-700 transition duration-300 mb-8`}
+                    className={`flex flex-row items-center cursor-pointer text-neutral-200 transition duration-300 mb-8`}
                     key={index}
-                    onClick={() => {
-                        /^\d+$/.test(shortcut.route)
-                            ? navigateProfile(shortcut.name, parseInt(shortcut.route))
-                            : navigate('/' + shortcut.route);
-                    }}
+                    onClick = {() => navigateShortcuts(shortcut.route, shortcut.name)}
                 >
-                    <BsStars className="text-neutral-300 mr-4 w-8 h-8" />
-                    <h1 className="text-xl">{shortcut.name}</h1>
+                    {icons.find(icon => icon.value === shortcut.customisation.icon)?.logo}
+                    <h1 className={`text-xl text-${shortcut.customisation.color}-700 hover:text-${shortcut.customisation.hover_color}-700`}>{shortcut.name}</h1>
                 </div>
             ))}
         </div>

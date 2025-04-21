@@ -12,6 +12,7 @@ import {BsStars} from "react-icons/bs";
 import {GoTriangleDown} from "react-icons/go";
 import { useLocation } from "react-router-dom";
 import {API_URL} from "../../config";
+import TagSelector from "./TagSelector";
 
 const PostMain = () => {
     const location = useLocation();
@@ -32,6 +33,8 @@ const PostMain = () => {
     const [description, setDescription] = useState("");
     const today = new Date();
     const [profile, setProfile] = useState(false);
+    const [privacy, setPrivacy] = useState(false);
+    const [tags, setTags] = useState([]);
 
     const fetchData = async () => {
         try{
@@ -117,8 +120,12 @@ const PostMain = () => {
         const combinedArray = {
             title: title,
             answers: answers,
-            template: selectedID
+            template: selectedID,
+            tags: tags,
+            privacy: privacy ? 1 : 0
         }
+
+        console.log(combinedArray);
 
         try{
             const response = await SendDataGeneral(combinedArray, `${API_URL}/api/authenticated/post`);
@@ -230,6 +237,31 @@ const PostMain = () => {
                                 </div>
                             </div>
                         </div>
+                        <div className = "flex flex-col">
+                            <h1 className="text-neutral-200 text-2xl">Post Privacy</h1>
+                            <div className = "flex md:flex-row flex-col p-4 justify-between gap-2">
+                                <div className = "flex flex-row items-center md:w-1/2 w-full">
+                                    <div
+                                        className = {`w-4 h-4 border-2 transition duration-200 ${privacy ? "border-neutral-600" : "border-blue-600"} mr-4 cursor-pointer flex-shrink-0`}
+                                        onClick={() => setPrivacy(!privacy)}
+                                    ></div>
+                                    <div className = "flex flex-col">
+                                        <h1 className = {`text-xl transition duration-200 ${privacy ? "text-neutral-600" : "text-neutral-200"}`}>Public</h1>
+                                        <h1 className = "text-neutral-600">Your post will be fully public for everyone to see</h1>
+                                    </div>
+                                </div>
+                                <div className = "flex flex-row items-center md:w-1/2 w-full">
+                                    <div
+                                        className = {`w-4 h-4 border-2 transition duration-200 ${privacy ? "border-red-600" : "border-neutral-600"} mr-4 cursor-pointer flex-shrink-0`}
+                                        onClick={() => setPrivacy(!privacy)}
+                                    ></div>
+                                    <div className = "flex flex-col">
+                                        <h1 className = {`text-xl transition duration-200 ${privacy ? "text-neutral-200" : "text-neutral-600"}`}>Private</h1>
+                                        <h1 className = "text-neutral-600">Your post will be private to everyone but your friends</h1>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <h1 className="text-neutral-200 text-2xl mb-2">Post content</h1>
                         {questions && questions.map((question, index) => (
                             <div className="flex flex-col w-full mb-2">
@@ -243,9 +275,10 @@ const PostMain = () => {
                                 />
                             </div>
                         ))}
+                        <TagSelector tags = {tags} setTags = {setTags}/>
                         {complete && (
                             <div
-                                className = "bg-green-600 mb-6 rounded-md mt-6 transition duration-200 hover:bg-green-700 cursor-pointer p-1 w-fit"
+                                className = "bg-green-600 mb-2 rounded-md mt-6 transition duration-200 hover:bg-green-700 cursor-pointer p-1 w-fit"
                                 onClick = {handleSubmit}
                             >
                                 <h1 className = "text-neutral-200">Create post</h1>
@@ -319,7 +352,7 @@ const PostMain = () => {
                             </div>
                             <div className="transition-all duration-300 overflow-hidden max-h-screen opacity-100">
                                 <div className="mt-2 flex sm:flex-row flex-col bg-neutral-900 gap-2 rounded-md p-2">
-                                    <div className="bg-[#111111] sm:w-1/2 w-full p-2 rounded-md">
+                                    <div className="bg-[#111111] md:w-1/2 w-full p-2 rounded-md">
                                         <div className="relative group" onClick={() => document.getElementById('fileInput').click()}>
                                             <div
                                                 className="cursor-pointer h-40 rounded-lg mb-4"
@@ -341,18 +374,27 @@ const PostMain = () => {
                                                 {answers[index] === "" && answers[index] ? (
                                                     <div className="h-3 rounded-md bg-neutral-400 mb-4 w-2/3 grow"></div>
                                                 ) : (
-                                                    <h1 className="text-neutral-400 mb-4 break-words">{answers[index]}</h1>
+                                                    <h1 className="text-neutral-400 mb-4 break-all">{answers[index]}</h1>
                                                 )}
                                             </div>
                                         ))}
                                     </div>
                                     <div className="flex flex-col p-2 sm:w-1/2 w-full justify-between">
                                         <div className="flex flex-col gap-2 mb-2">
-                                            <h1 className="text-neutral-200 text-2xl">{title}</h1>
-                                            <h1 className="text-neutral-600 text-md">{description}</h1>
+                                            <h1 className="text-neutral-200 text-2xl break-all">{title}</h1>
+                                            <h1 className="text-neutral-600 text-md break-all">{description}</h1>
+                                            <div className="flex flex-wrap gap-2 mt-2">
+                                                {tags?.map((tag) => (
+                                                    <span
+                                                        key={tag}
+                                                        className="text-neutral-500 text-sm font-medium"
+                                                    >#{tag}</span>
+                                                ))}
+                                            </div>
                                         </div>
-                                        <PiStarFourFill className="w-10 h-10 text-neutral-700 cursor-pointer hover:text-yellow-500 transition duration-200"/>
+                                        <PiStarFourFill className="w-10 h-10 text-neutral-700 cursor-pointer hover:text-yellow-500 transition duration-200" />
                                     </div>
+
                                 </div>
                             </div>
                         </div>

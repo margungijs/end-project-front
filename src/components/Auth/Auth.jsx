@@ -5,10 +5,12 @@ import {errorCheck, touched} from "../../assets/Validations";
 import SendData from "../../reuse/SendData";
 import {OrbitProgress} from "react-loading-indicators";
 import { API_URL } from "../../config";
+import {useAuth} from "../../AuthContext";
 
 const Auth = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
+
 
     const HandleSignUp = () => {
         navigate('/register');
@@ -63,7 +65,7 @@ const Auth = () => {
 
     return (
         <div className = "bg-neutral-950 h-screen w-screen flex flex-col items-center overflow-x-hidden">
-            <div className = "bg-[#111111] rounded-lg lg:w-3/12 md:w-4/12 w-8/12 mt-40 py-8 px-6 border-[1px] border-neutral-700 mb-4">
+            <div className = "bg-[#111111] rounded-lg lg:w-3/12 md:w-4/12 w-8/12 mt-40 py-8 px-6 mb-4">
                 {!loading && (
                     <>
                         <h1 className = "text-4xl text-yellow-300 mb-8">Sign into Chronicle</h1>
@@ -73,7 +75,7 @@ const Auth = () => {
                             value = {login.name}
                             name = "name"
                             onChange={(e) => HandleInputChange(e, setLogin, setError)}
-                            className = " mb-2 bg-neutral-950 w-full rounded-lg indent-2 text-blue-500 h-8 border-[1px] transform duration-300 border-neutral-700 focus:outline-none focus:ring-[1px] focus:ring-blue-500"
+                            className = " mb-2 bg-neutral-950 w-full rounded-lg indent-2 text-blue-500 h-8 transform duration-300 focus:outline-none focus:ring-[1px] focus:ring-blue-500"
                         />
                         <p className = "mb-4 text-red-500">{error.name}</p>
                         <h1 className = "text-neutral-200 text-md mb-2">Password</h1>
@@ -82,7 +84,7 @@ const Auth = () => {
                             value = {login.password}
                             name = "password"
                             onChange={(e) => HandleInputChange(e, setLogin, setError)}
-                            className = "mb-2 bg-neutral-950 w-full rounded-lg indent-2 text-blue-500 h-8 border-[1px] transform duration-300 border-neutral-700 focus:outline-none focus:ring-[1px] focus:ring-blue-500"
+                            className = "mb-2 bg-neutral-950 w-full rounded-lg indent-2 text-blue-500 h-8 transform duration-300 focus:outline-none focus:ring-[1px] focus:ring-blue-500"
                         />
                         <p className = "mb-4 text-red-500">{error.password}</p>
                         <div className = "bg-blue-500 w-full h-8 rounded-lg flex items-center justify-center text-white hover:bg-blue-600 transform duration-300 cursor-pointer" onClick={HandleSubmit}>Sign in</div>
@@ -101,7 +103,7 @@ const Auth = () => {
                     <h1 className = "text-red-700">Invalid username or password</h1>
                 </div>
             )}
-            <div className = "bg-[#111111] rounded-lg lg:w-3/12 md:w-4/12 w-8/12 py-6 border-[1px] border-neutral-700 flex flex-col items-center text-center justify-center px-2">
+            <div className = "bg-[#111111] rounded-lg lg:w-3/12 md:w-4/12 w-8/12 py-6 flex flex-col items-center text-center justify-center px-2">
                 <h1 className = "text-neutral-200">Don't have an account? <span className = "text-blue-500 cursor-pointer" onClick = {HandleSignUp}>Sign up</span></h1>
             </div>
         </div>

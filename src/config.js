@@ -3,7 +3,7 @@ const getApiUrl = () => {
         return "http://localhost";
     }
 
-    return process.env.REACT_APP_API_URL || "https://lucky-delight-production.up.railway.app";
+    return process.env.REACT_APP_API_URL || "https://chronicleapi.kantans.com";
 }
 
 export const API_URL = getApiUrl();

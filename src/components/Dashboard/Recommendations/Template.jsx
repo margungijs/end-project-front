@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {useNavigate} from "react-router-dom";
 
 const Template = () => {
     const navigate = useNavigate();
+    const [title, setTitle] = useState('');
+    const [desc, setDesc] = useState('');
 
     return (
         <div className = "bg-[#111111] p-4 lg:w-1/2 w-full rounded-lg flex flex-col">
@@ -14,16 +16,22 @@ const Template = () => {
                     type="text"
                     className = "bg-neutral-950 mb-2 text-neutral-600 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md placeholder-neutral-600 indent-2 py-1"
                     placeholder = "title your template"
+                    value = {title}
+                    onChange = {(e) => setTitle(e.target.value)}
                 />
                 <input
                     type="text"
                     className = "bg-neutral-950 text-neutral-600 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md placeholder-neutral-600 indent-2 py-1"
                     placeholder = "describe the meaning of it"
+                    value = {desc}
+                    onChange = {(e) => setDesc(e.target.value)}
                 />
             </div>
             <div
                 className = "mt-auto rounded-md cursor-pointer transition duration-200 hover:bg-blue-700 bg-blue-600 w-fit p-1"
-                onClick = {() => navigate('/Template')}
+                onClick = {() => navigate('/Template', {
+                    state: {title: title, desc: desc}
+                })}
             >
                 <h1 className = "text-neutral-200">Template</h1>
             </div>

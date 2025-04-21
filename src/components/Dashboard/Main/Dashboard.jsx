@@ -17,6 +17,7 @@ const Dashboard = () => {
     const [data, setData] = useState({});
     const [profile, setProfile] = useState(false);
     const [feed, setFeed] = useState(false);
+    const [filter, setFilter] = useState("all");
     const [shortcuts, setShortcuts] = useState([]);
     const [friends, setFriends] = useState([]);
     const [requests, setRequests] = useState([]);
@@ -36,6 +37,7 @@ const Dashboard = () => {
             localStorage.setItem('name', response.data.user.name);
             localStorage.setItem('image', response.data.user.image);
             localStorage.setItem('id', response.data.user.id);
+            localStorage.setItem('tts', response.data.user.tts);
         } catch (error) {
             console.error('Error fetching the data', error);
         }
@@ -50,17 +52,37 @@ const Dashboard = () => {
             <DashboardHeader profile={() => setProfile(!profile)} open = {profile} sideBar = {setSideBars} sideCurrent={sideBars}/>
             <div className = "flex flex-row items-center justify-center relative">
                 <Shortcuts shortcuts = {shortcuts} show = {sideBars}/>
-                <div className = "flex flex-col px-2 py-8 md:w-2/4 w-full">
-                    <div className = "flex flex-row mb-4">
-                        <h1 className = "text-2xl text-neutral-200 mr-4">Chronicle</h1>
-                        <h1
-                            className = {`text-xl ${feed ? 'text-neutral-700' : 'text-blue-500'} transition duration-200 cursor-pointer flex items-center border-r-[1px] pr-2 border-neutral-700`}
-                            onClick = {() => setFeed(false)}
-                        >Your feed</h1>
-                        <h1
-                            className = {`text-xl ${feed ? 'text-blue-500' : 'text-neutral-700'} transition duration-200 cursor-pointer flex items-center ml-2`}
-                            onClick = {() => setFeed(true)}
-                        >Explore</h1>
+                <div className = "flex flex-col px-2 py-8 lg:w-1/2 md:w-3/4 w-full">
+                    <div className="flex flex-row mb-4 justify-between">
+                        <div className="flex flex-row">
+                            <h1 className="text-2xl text-neutral-200 mr-4">Chronicle</h1>
+                            <h1
+                                className={`text-xl ${feed ? 'text-neutral-700' : 'text-blue-500'} transition duration-200 cursor-pointer flex items-center border-r-[1px] pr-2 border-neutral-700`}
+                                onClick={() => setFeed(false)}
+                            >
+                                Your feed
+                            </h1>
+                            <h1
+                                className={`text-xl ${feed ? 'text-blue-500' : 'text-neutral-700'} transition duration-200 cursor-pointer flex items-center ml-2`}
+                                onClick={() => setFeed(true)}
+                            >
+                                Explore
+                            </h1>
+                        </div>
+
+                        {feed && (
+                            <div className="flex items-center">
+                                <select
+                                    value={filter}
+                                    onChange={(e) => setFilter(e.target.value)}
+                                    className="bg-neutral-900 text-neutral-200 rounded-md px-3 py-1 text-sm focus:outline-none"
+                                >
+                                    <option value="all">All</option>
+                                    <option value="posts">Posts</option>
+                                    <option value="templates">Templates</option>
+                                </select>
+                            </div>
+                        )}
                     </div>
                     <div className = "mb-2 flex flex-row items-center">
                         <IoIosPlay className = "text-xl text-blue-500 mr-2"/>
@@ -68,7 +90,7 @@ const Dashboard = () => {
                     </div>
                     <div className = "flex lg:flex-row flex-col mb-6 gap-4">
                         <NewPost />
-                        <AdditionalInfo />
+                        {/*<AdditionalInfo />*/}
                     </div>
                     <div className = "mb-2 flex flex-row items-center">
                         <FiAward className = "text-xl text-purple-500 mr-2"/>
@@ -85,7 +107,7 @@ const Dashboard = () => {
                     {!feed ? (
                         <YourFeed />
                     ) : (
-                        <Explore />
+                        <Explore filter = {filter}/>
                     )}
                 </div>
                 <Friends friends = {friends} requests = {requests} setRequests={setRequests} fetch = {fetchData} show = {sideBars}/>

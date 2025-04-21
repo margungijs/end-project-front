@@ -6,27 +6,27 @@ const PostOutput = ({posts, limits, marks, chosenLimit}) => {
 
 
     return (
-        <div className = "flex flex-col p-4 gap-4">
+        <div className = "flex flex-col p-4 gap-4 lg:w-3/4 w-full">
             {limits.map((limit, index) => (
                 chosenLimit === 13 ? (
                     <div
                         key={index}
-                        className="flex flex-col"
+                        className="flex flex-col lg:justify-none justify-center lg:items-baseline items-center"
                     >
                         <h1 className = "text-xl text-neutral-200">{marks.find(mark => mark.value === limit.limit)?.label}</h1>
-                        <div className = "flex flex-row py-2 gap-4 overflow-x-hidden">
+                        <div className = "flex flex-row flex-wrap py-2 gap-4 overflow-x-hidden lg:justify-start justify-center lg:items-start items-center">
                             {posts.map((post, index) => (
                                 post.limit == limit.limit && (
-                                    <div className = "bg-[#111111] flex flex-col w-72 border-neutral-700 border-[1px] p-1 rounded-md">
+                                    <div className = "bg-[#111111] flex flex-col w-72 p-1 rounded-md">
                                         <div className="relative">
                                             {post.image === null ? (
                                                 <div
-                                                    className="border-neutral-700 border-[1px] h-40 rounded-lg mb-4"
+                                                    className="h-40 rounded-lg mb-4"
                                                     style={{ backgroundImage: `url(${Image})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
                                                 ></div>
                                             ) : (
                                                 <div
-                                                    className="border-neutral-700 border-[1px] h-40 rounded-lg mb-4"
+                                                    className="h-40 rounded-lg mb-4"
                                                     style={{ backgroundImage: `url(${API_URL}/storage/${post.image})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
                                                 ></div>
                                             )}
@@ -45,6 +45,14 @@ const PostOutput = ({posts, limits, marks, chosenLimit}) => {
                                                 )}
                                             </div>
                                         ))}
+                                        <div className = "flex flex-wrap gap-2 mt-2 items-end">
+                                            {post?.tags.map((tag, index) => (
+                                                <span
+                                                    key={index}
+                                                    className="text-neutral-500 text-sm font-medium"
+                                                >#{tag.name?.en}</span>
+                                            ))}
+                                        </div>
                                     </div>
                                 )
                             ))}
@@ -60,16 +68,16 @@ const PostOutput = ({posts, limits, marks, chosenLimit}) => {
                             <div className = "flex flex-row py-2 gap-4 overflow-x-auto">
                                 {posts.map((post, index) => (
                                     post.limit == limit.limit && (
-                                        <div className = "bg-[#111111] flex flex-col w-72 border-neutral-700 border-[1px] p-1 rounded-md">
+                                        <div className = "bg-[#111111] flex flex-col w-72 p-1 rounded-md">
                                             <div className="relative">
                                                 {post.image === null ? (
                                                     <div
-                                                        className="border-neutral-700 border-[1px] h-40 rounded-md mb-4"
+                                                        className="h-40 rounded-md mb-4"
                                                         style={{ backgroundImage: `url(${Image})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
                                                     ></div>
                                                 ) : (
                                                     <div
-                                                        className="border-neutral-700 border-[1px] h-40 rounded-md mb-4"
+                                                        className="h-40 rounded-md mb-4"
                                                         style={{ backgroundImage: `url(${API_URL}/storage/${post.image})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
                                                     ></div>
                                                 )}

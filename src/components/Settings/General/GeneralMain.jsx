@@ -7,11 +7,13 @@ import axios from "axios";
 import {FaRegUserCircle} from "react-icons/fa";
 import sendDataGeneral from "../../../reuse/SendDataGeneral";
 import { API_URL } from "../../../config";
+import speakText from "../../../reuse/SpeakText";
 
 const GeneralMain = () => {
     const name = localStorage.getItem('name');
     const [value, setValue] = useState(0);
-    const [privacy, setPrivacy] = useState(false);
+    const [isPrivacyChanged, setIsPrivacyChanged] = useState(false);
+    const [tts, setTts] = useState(false);
     const fileInputRef = useRef(null);
     const [selectedImage, setSelectedImage] = useState(null);
     const [imageError, setImageError] = useState(false);
@@ -19,7 +21,9 @@ const GeneralMain = () => {
     const [username, setUsername] = useState('');
     const [isChanging, setIsChanging] = useState(false);
     const [isSliderChanged, setIsSliderChanged] = useState(false);
+    const [isTtsChanged, setIsTtsChanged] = useState(false);
     const [initialSlider, setInitialSlider] = useState(null);
+    const [privacy, setPrivacy] = useState(false);
 
     const marks = [
         { value: 0, label: '2 weeks' },
@@ -42,7 +46,7 @@ const GeneralMain = () => {
     }
 
 
-    const CustomSlider = styled(Slider)({
+    const CustomSlider = styled(Slider)(({ theme }) => ({
         '& .MuiSlider-markLabel': {
             display: 'none'
         },
@@ -71,11 +75,17 @@ const GeneralMain = () => {
         },
         '& .MuiSlider-markLabel[data-index="0"]': {
             color: 'white',
-            display: 'block'
+            display: 'block',
+            [theme.breakpoints.down("md")]: {
+                display: "none", // Hide these labels when screen is small
+            },
         },
         '& .MuiSlider-markLabel[data-index="12"]':{
             color: 'white',
-            display: 'block'
+            display: 'block',
+            [theme.breakpoints.down("md")]: {
+                display: "none", // Hide these labels when screen is small
+            },
         },
         [`& .MuiSlider-markLabel[data-index="${value}"]`]: {
             display: 'block',
@@ -90,7 +100,7 @@ const GeneralMain = () => {
         '& .Mui-focusVisible': {
             boxShadow: 'none'
         }
-    });
+    }));
 
     const handleImageClick = () => {
         fileInputRef.current.click();
@@ -138,6 +148,7 @@ const GeneralMain = () => {
             console.log(response)
             setUser(response.data.user);
             setValue(response.data.user.post_limit.limit);
+            setTts(response.data.user.tts === 1)
         } catch (error) {
             console.error('Error fetching the data', error);
         }
@@ -152,9 +163,32 @@ const GeneralMain = () => {
         }
     };
 
+    const handleTtsChange = (newValue) => {
+        if(newValue === (user.tts === 1)){
+            setIsTtsChanged(false)
+        }else{
+            setIsTtsChanged(true)
+        }
+        setTts(newValue);
+    }
+
+    const handlePrivacyChange = (newValue) => {
+        console.log(newValue, user.privacy === 1)
+        if(newValue === (user.privacy === 1)){
+            setIsPrivacyChanged(false)
+        }else{
+            setIsPrivacyChanged(true)
+        }
+        setPrivacy(newValue);
+    }
+
     useEffect(() => {
         fetchData();
     }, []);
+
+    useEffect(() => {
+        setPrivacy(user?.privacy === 1)
+    }, [user]);
 
     const handleEdit = async () => {
         const data = {}
@@ -163,26 +197,43 @@ const GeneralMain = () => {
             data.name = username;
         }
 
-        console.log(value)
+        const userTts = user.tts === 1;
+        if(tts !== userTts){
+            data.tts = tts
+        }
+
+        if(privacy ? 1 : 0 !== user.privacy){
+            data.privacy = privacy ? 1 : 0;
+        }
 
         if(isSliderChanged || value == 0){
             data.limit = value;
         }
 
         setIsChanging(false)
-
         try{
-            const response = await sendDataGeneral(data, `${ API_URL }/api/authenticated/edit`);
-            console.log(response)
+            await sendDataGeneral(data, `${ API_URL }/api/authenticated/edit`);
+            if ('tts' in data) {
+                user.tts = data.tts ? 1 : 0;
+                handleTtsChange(data.tts);
+                if (data.tts) {
+                    speakText('Automatic text-to-speech is now enabled!');
+                }
+            }
+
+            if ('privacy' in data) {
+                user.privacy = data.privacy;
+                handlePrivacyChange(data.privacy === 1);
+            }
         }catch (error){
             console.log(error)
         }
     }
 
     return (
-        <div className = "flex flex-col p-2 w-2/3">
+        <div className = "flex flex-col p-2 lg:w-3/4 w-full justify-self-end lg:pl-10">
             <h1 className = "text-neutral-200 text-2xl mb-4">General settings</h1>
-            <div className = "flex flex-row items-center mb-4">
+            <div className = "flex md:flex-row flex-col items-center mb-4">
                 <div className="relative w-40 h-40 rounded-full mr-4 cursor-pointer" onClick={handleImageClick}>
                     {user.image != null ? (
                         selectedImage ? (
@@ -207,7 +258,7 @@ const GeneralMain = () => {
                     style={{ display: 'none' }}
                     onChange={handleFileChange}
                 />
-                <div className = "flex flex-col">
+                <div className = "flex flex-col md:items-baseline items-center">
                     {user.name ? (
                             isChanging ? (
                                     <input
@@ -283,7 +334,7 @@ const GeneralMain = () => {
                         <IoMdArrowDropdown className = "text-2xl rotate-[270deg]"/>
                     </div>
                 </div>
-                <div className = "px-8 py-4 flex flex-col relative items-center justify-center">
+                <div className = "md:px-8 py-4 flex flex-col relative items-center justify-center">
                     <CustomSlider
                         aria-label="Restricted values"
                         defaultValue={0}
@@ -298,21 +349,21 @@ const GeneralMain = () => {
             </div>
             <h1 className = "text-2xl text-neutral-200 mb-1">Profile privacy</h1>
             <h1 className = "text-xl text-neutral-600">Your profile will be private by default to users that aren't on your friend list, but you can choose to set your profile to public or private to your friends</h1>
-            <div className = "flex flex-row p-4 justify-between gap-2">
-                <div className = "flex flex-row items-center w-1/2">
+            <div className = "flex md:flex-row flex-col p-4 justify-between gap-2">
+                <div className = "flex flex-row items-center md:w-1/2 w-full">
                     <div
                         className = {`w-4 h-4 border-2 transition duration-200 ${privacy ? "border-neutral-600" : "border-green-600"} mr-4 cursor-pointer flex-shrink-0`}
-                        onClick={() => setPrivacy(!privacy)}
+                        onClick={() => handlePrivacyChange(!privacy)}
                     ></div>
                     <div className = "flex flex-col">
                         <h1 className = {`text-xl transition duration-200 ${privacy ? "text-neutral-600" : "text-neutral-200"}`}>Public</h1>
                         <h1 className = "text-neutral-600">Your profile will be fully public to your friends</h1>
                     </div>
                 </div>
-                <div className = "flex flex-row items-center w-1/2">
+                <div className = "flex flex-row items-center md:w-1/2 w-full">
                     <div
                         className = {`w-4 h-4 border-2 transition duration-200 ${privacy ? "border-green-600" : "border-neutral-600"} mr-4 cursor-pointer flex-shrink-0`}
-                        onClick={() => setPrivacy(!privacy)}
+                        onClick={() => handlePrivacyChange(!privacy)}
                     ></div>
                     <div className = "flex flex-col">
                         <h1 className = {`text-xl transition duration-200 ${privacy ? "text-neutral-200" : "text-neutral-600"}`}>Private</h1>
@@ -320,12 +371,36 @@ const GeneralMain = () => {
                     </div>
                 </div>
             </div>
-            {(username !== '' || isSliderChanged) && (
+            <h1 className = "text-2xl text-neutral-200 mb-1">Automatic text-to-speech</h1>
+            <h1 className = "text-xl text-neutral-600">You can choose to automatically start text-to-speech mode for templates or posts that you want to view</h1>
+            <div className = "flex md:flex-row flex-col p-4 justify-between gap-2">
+                <div className = "flex flex-row items-center md:w-1/2 w-full">
+                    <div
+                        className = {`w-4 h-4 border-2 transition duration-200 ${!tts ? "border-neutral-600" : "border-green-600"} mr-4 cursor-pointer flex-shrink-0`}
+                        onClick={() => handleTtsChange(!tts)}
+                    ></div>
+                    <div className = "flex flex-col">
+                        <h1 className = {`text-xl transition duration-200 ${tts ? "text-neutral-600" : "text-neutral-200"}`}>On</h1>
+                        <h1 className = "text-neutral-600">Posts and templates will be automatically converted to text-to-speech</h1>
+                    </div>
+                </div>
+                <div className = "flex flex-row items-center md:w-1/2 w-full">
+                    <div
+                        className = {`w-4 h-4 border-2 transition duration-200 ${!tts ? "border-green-600" : "border-neutral-600"} mr-4 cursor-pointer flex-shrink-0`}
+                        onClick={() => handleTtsChange(!tts)}
+                    ></div>
+                    <div className = "flex flex-col">
+                        <h1 className = {`text-xl transition duration-200 ${tts ? "text-neutral-200" : "text-neutral-600"}`}>Off</h1>
+                        <h1 className = "text-neutral-600">Automatic text-to-speech will be turned off</h1>
+                    </div>
+                </div>
+            </div>
+            {(username !== '' || isSliderChanged || isTtsChanged || isPrivacyChanged) && (
                 <div
-                    className = "bg-[#111111] border-[1px] hover:border-green-600 transition duration-200 cursor-pointer border-neutral-700 mb-4 rounded-md text-center p-1 w-20"
-                    onClick = {handleEdit}
+                    className="bg-[#111111] border-[1px] hover:border-green-600 transition duration-200 cursor-pointer border-neutral-700 mb-4 rounded-md text-center p-1 w-20"
+                    onClick={handleEdit}
                 >
-                    <h1 className = "text-neutral-200">Save</h1>
+                    <h1 className="text-neutral-200">Save</h1>
                 </div>
             )}
         </div>

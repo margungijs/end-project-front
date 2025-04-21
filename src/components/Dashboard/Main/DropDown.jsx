@@ -26,14 +26,33 @@ const DropDown = ({name, image, open, status}) => {
             null, `${API_URL}/logout`, () => setLoading(true)
         ).then(response => {
             console.log(response)
+            localStorage.clear();
             handleRedirect()
         }).catch(error => {
             console.log("Error", error)
+            localStorage.clear();
+            handleRedirect()
         })
     }
 
     const navigateToProfile = () => {
         navigate(`/Profiles/You`, {state: {id: id}});
+    }
+
+    const dropNavigation = (route) => {
+        navigate(`/${route}`);
+    }
+
+    const navigateTemplates = () => {
+        navigate(`/collection`, {state: 'templates'})
+    }
+
+    const navigateShortcuts = () => {
+        navigate(`/settings?section=shortcuts`);
+    }
+
+    const navigateFriends = () => {
+        navigate(`/settings?section=friends`);
     }
 
     return (
@@ -66,19 +85,31 @@ const DropDown = ({name, image, open, status}) => {
                             <FiUser className = "w-5 h-5 mr-2 text-neutral-400"/>
                             <h1 className = "text-md">Your profile</h1>
                         </div>
-                        <div className = "flex flex-row text-neutral-400 rounded-lg p-1 items-center cursor-pointer hover:bg-neutral-800 transition duration-200">
+                        <div
+                            className = "flex flex-row text-neutral-400 rounded-lg p-1 items-center cursor-pointer hover:bg-neutral-800 transition duration-200"
+                            onClick = {navigateTemplates}
+                        >
                             <TiDocument className = "w-5 h-5 mr-2 text-neutral-400"/>
                             <h1 className = "text-md">Your templates</h1>
                         </div>
-                        <div className = "flex flex-row text-neutral-400 rounded-lg p-1 items-center cursor-pointer hover:bg-neutral-800 transition duration-200">
+                        <div
+                            className = "flex flex-row text-neutral-400 rounded-lg p-1 items-center cursor-pointer hover:bg-neutral-800 transition duration-200"
+                            onClick = {navigateShortcuts}
+                        >
                             <IoTrailSignOutline className = "w-5 h-5 mr-2 text-neutral-400"/>
                             <h1 className = "text-md">Your shortcuts</h1>
                         </div>
-                        <div className = "flex flex-row text-neutral-400 rounded-lg p-1 items-center cursor-pointer hover:bg-neutral-800 transition duration-200">
+                        <div
+                            className = "flex flex-row text-neutral-400 rounded-lg p-1 items-center cursor-pointer hover:bg-neutral-800 transition duration-200"
+                            onClick = {navigateFriends}
+                        >
                             <BsStars className = "w-5 h-5 mr-2 text-neutral-400"/>
                             <h1 className = "text-md">Your friends</h1>
                         </div>
-                        <div className = "flex flex-row text-neutral-400 rounded-lg p-1 items-center cursor-pointer hover:bg-neutral-800 transition duration-200">
+                        <div
+                            className = "flex flex-row text-neutral-400 rounded-lg p-1 items-center cursor-pointer hover:bg-neutral-800 transition duration-200"
+                            onClick={() => dropNavigation('collection')}
+                        >
                             <BsCollection className = "w-5 h-5 mr-2 text-neutral-400"/>
                             <h1 className = "text-md">Your collection</h1>
                         </div>

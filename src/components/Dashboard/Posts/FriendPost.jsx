@@ -1,24 +1,59 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { BsStars } from "react-icons/bs";
 import { GoTriangleDown } from "react-icons/go";
 import { FaRegUserCircle } from "react-icons/fa";
 import { PiStarFourFill } from "react-icons/pi";
-import { CSSTransition } from 'react-transition-group';
 import Image from "../../../assets/images/placeholder.png";
 import {useNavigate} from "react-router-dom";
 import {API_URL} from "../../../config";
+import { HiMiniSpeakerWave } from "react-icons/hi2";
+import speakText from "../../../reuse/SpeakText";
+import SendDataGeneral from "../../../reuse/SendDataGeneral";
 
-const FriendPost = ({name, image, title, date, template, answers, post_image, like, liked, user_id}) => {
+const FriendPost = React.forwardRef(({name, image, title, date, template, answers, post_image, like, liked, user_id, post_id, tags}, ref) => {
     const [open, setOpen] = useState(false);
     const [likedPost, setLikedPost] = useState(liked);
     const navigate = useNavigate();
+    const tts = localStorage.getItem('tts');
 
     const navigateToProfile = (id) => {
         navigate(`/Profiles/${name}`, {state: {id: id}});
     }
 
+    const speakPost = async (name, title, template, answers) => {
+        if (window.speechSynthesis.speaking) {
+            window.speechSynthesis.cancel();
+
+            return;
+        }
+
+        let speech = `${name} created a post, titled ${title} - `;
+
+        const maxLength = Math.max(template.questions.length, answers.length);
+        for (let i = 0; i < maxLength; i++) {
+            if (template.questions[i]) speech += template.questions[i] + ' - ';
+            if (answers[i]) speech += answers[i] + ' - ';
+        }
+
+        speakText(speech);
+    };
+
+    useEffect(() => {
+        if (tts == 1 && open) {
+            speakPost(name, title, template, answers);;
+        }
+    }, [open, tts, name, title, template, answers]);
+
+    const viewPost = async (id) => {
+        try{
+            await SendDataGeneral({id: id}, `${API_URL}/api/authenticated/postView`);
+        }catch(error){
+            console.log(error);
+        }
+    }
+
     return (
-        <div className = "flex flex-col bg-[#111111] p-4 rounded-lg">
+        <div ref={ref} className = "flex flex-col bg-[#111111] p-4 rounded-lg">
             <div className = "flex flex-row items-center">
                 {image !== null ? (
                     <img src={`${API_URL}/storage/` + image} className = "w-8 h-8 rounded-full mr-2"/>
@@ -44,7 +79,10 @@ const FriendPost = ({name, image, title, date, template, answers, post_image, li
                 </div>
                 <div
                     className = "bg-neutral-900 hover:bg-neutral-800 transition duration-200 cursor-pointer rounded-md px-2 flex items-center flex-row py-1"
-                    onClick = {() => setOpen(!open)}
+                    onClick={() => {
+                        setOpen(!open)
+                        viewPost(post_id)
+                    }}
                 >
                     <GoTriangleDown className = {`text-neutral-600 mr-3 transition duration-200  ${open ? "rotate-180" : ""}`}/>
                     <h1 className = "text-neutral-200 text-sm">View</h1>
@@ -79,15 +117,31 @@ const FriendPost = ({name, image, title, date, template, answers, post_image, li
                         <div className="flex flex-col gap-2 mb-2">
                             <h1 className="text-neutral-200 text-2xl break-words">{title}</h1>
                             <h1 className="text-neutral-600 text-md break-words">{template.description}</h1>
+                            <div className="flex flex-wrap gap-2 mt-2">
+                                {tags?.map((tag, index) => (
+                                    <span
+                                        key={index}
+                                        className="text-neutral-500 text-sm font-medium"
+                                    >#{tag.name?.en}</span>
+                                ))}
+                            </div>
                         </div>
-                        <PiStarFourFill
-                            onClick={() => {like(); setLikedPost(!liked);}}
-                            className={`w-10 h-10 cursor-pointer ${likedPost ? "text-yellow-500" : "text-neutral-700"} hover:text-yellow-500 transition duration-200`}/>
+                        <div className = "flex flex-row gap-2">
+                            <PiStarFourFill
+                                onClick={() => {like(); setLikedPost(!likedPost);}}
+                                className={`w-10 h-10 cursor-pointer ${likedPost ? "text-yellow-500" : "text-neutral-700"} hover:text-yellow-500 transition duration-200`}/>
+                            <HiMiniSpeakerWave
+                                className = 'w-10 h-10 cursor-pointer hover:text-blue-500 text-neutral-700 transition duration-200'
+                                onClick = {() => speakPost(name, title, template, answers)}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     );
-};
+});
+
+FriendPost.displayName = 'FriendPost';
 
 export default FriendPost;

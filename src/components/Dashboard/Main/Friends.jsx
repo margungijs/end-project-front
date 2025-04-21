@@ -32,7 +32,7 @@ const Friends = ({ friends, requests, setRequests, fetch, show}) => {
 
     return (
         <div
-            className={`h-screen p-2 lg:w-1/4 w-full absolute right-0 rounded-bl-md top-0 bg-[#111111] py-8 px-6 transform transition-all duration-500 ease-in-out 
+            className={`h-screen p-2 md:w-1/4 w-full absolute right-0 rounded-bl-md top-0 bg-[#111111] transform transition-all duration-500 ease-in-out 
             ${show === "friends" ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"} 
             lg:translate-x-0 lg:opacity-100`}
         >
@@ -41,7 +41,7 @@ const Friends = ({ friends, requests, setRequests, fetch, show}) => {
                     <h1 className = "text-neutral-200 text-2xl mb-2">Friends</h1>
                     {allFriends.length > 0 ? (
                         allFriends.map((friend, index) => (
-                            <div key={index} className="flex flex-row bg-[#111111] border-[1px] p-2 border-neutral-700 rounded-md items-center mb-2">
+                            <div key={index} className="flex flex-row bg-neutral-950 p-2 rounded-md items-center mb-2">
                                 {friend.image !== null ? (
                                     <img src={`${API_URL}/storage/` + friend.image} className = "w-10 h-10 rounded-full mr-2"/>
                                 ) : (
