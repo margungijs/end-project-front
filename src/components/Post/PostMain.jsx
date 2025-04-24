@@ -13,6 +13,7 @@ import {GoTriangleDown} from "react-icons/go";
 import { useLocation } from "react-router-dom";
 import {API_URL} from "../../config";
 import TagSelector from "./TagSelector";
+import {useAuth} from "../../AuthContext";
 
 const PostMain = () => {
     const location = useLocation();
@@ -35,6 +36,51 @@ const PostMain = () => {
     const [profile, setProfile] = useState(false);
     const [privacy, setPrivacy] = useState(false);
     const [tags, setTags] = useState([]);
+    const { user } = useAuth();
+    const [cooldownMessage, setCooldownMessage] = useState('');
+    const [canPost, setCanPost] = useState(true);
+    const [inputErrors, setInputErrors] = useState([]);
+    const [titleError, setTitleError] = useState(null);
+    const [imageError, setImageError] = useState(null);
+
+    const marks = [
+        { value: 0, label: '2 weeks', duration: 14 },
+        { value: 1, label: '1 month', duration: 30 },
+        { value: 2, label: '2 months', duration: 60 },
+        { value: 3, label: '3 months', duration: 90 },
+        { value: 4, label: '4 months', duration: 120 },
+        { value: 5, label: '5 months', duration: 150 },
+        { value: 6, label: '6 months', duration: 180 },
+        { value: 7, label: '7 months', duration: 210 },
+        { value: 8, label: '8 months', duration: 240 },
+        { value: 9, label: '9 months', duration: 270 },
+        { value: 10, label: '10 months', duration: 300 },
+        { value: 11, label: '11 months', duration: 330 },
+        { value: 12, label: '1 year', duration: 365 }
+    ];
+
+    useEffect(() => {
+        if (Array.isArray(user.post_limit.posts) && user.post_limit.posts.length === 0) {
+            setCanPost(true);
+            setCooldownMessage('');
+            return;
+        }
+
+        if (user.post_limit && user.post_limit.updated_at) {
+            const lastPostDate = new Date(user.post_limit.updated_at);
+            const now = new Date();
+
+            const timePassedInDays = Math.floor((now - lastPostDate) / (1000 * 60 * 60 * 24));
+            const requiredDays = marks.find(m => m.value === user.post_limit.limit)?.duration || 0;
+
+            if (timePassedInDays < requiredDays) {
+                setCanPost(false);
+                const remainingDays = requiredDays - timePassedInDays;
+
+                setCooldownMessage(`You can't create a new post yet. Please wait ${remainingDays} more day${remainingDays !== 1 ? 's' : ''}. Last post was on ${lastPostDate.toLocaleDateString()}.`);
+            }
+        }
+    }, [user.post_limit]);
 
     const fetchData = async () => {
         try{
@@ -56,9 +102,18 @@ const PostMain = () => {
     }, [])
 
     useEffect(() => {
-        const allFieldsFilled = title !== "" && answers.every(q => q !== "") && imageURL !== "";
+        const allFieldsFilled =
+            title !== "" &&
+            answers.every(q => q !== "") &&
+            imageURL !== "" &&
+            titleError === null &&
+            inputErrors.every(error => error === null) &&
+            imageError === null
+        ;
+
         setComplete(allFieldsFilled);
-    }, [title, answers, imageURL])
+    }, [title, answers, imageURL, titleError, inputErrors]);
+
 
     const handleTemplateSelect = (template) => {
         setSelected(template.title);
@@ -71,18 +126,36 @@ const PostMain = () => {
         const newAnswers = [...answers];
         newAnswers[index] = value;
         setAnswers(newAnswers);
+
+        const newErrors = [...inputErrors];
+        if (value.trim() === "") {
+            newErrors[index] = "This field is required.";
+        } else if (value.length > 225) {
+            newErrors[index] = "Message cannot exceed 225 characters.";
+        } else {
+            newErrors[index] = null;
+        }
+
+        setInputErrors(newErrors);
     };
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
+
         if (file && file.type.startsWith('image/')) {
+            if (file.size > 2048 * 1024) {
+                setImageError('The selected image is too large. Please select an image smaller than 2MB.');
+                return;
+            }
+
             const reader = new FileReader();
             reader.onloadend = () => {
                 setImageURL(reader.result);
+                setImageError(null);
             };
             reader.readAsDataURL(file);
         } else {
-            console.error('Please select a valid image file.');
+            setImageError('Please select a valid image file.');
         }
     };
 
@@ -91,7 +164,7 @@ const PostMain = () => {
     useEffect(() => {
         const timer = setTimeout(() => {
             setInitialOverlay(false);
-        }, 3000); // Adjust the delay as needed
+        }, 3000);
 
         return () => clearTimeout(timer);
     }, []);
@@ -100,7 +173,6 @@ const PostMain = () => {
         const formData = new FormData();
         formData.append('image', document.getElementById('fileInput').files[0]);
         formData.append('id', postId);
-
 
         try {
             const response = await axios.post(`${API_URL}/api/authenticated/postImage`, formData, {
@@ -130,21 +202,28 @@ const PostMain = () => {
         try{
             const response = await SendDataGeneral(combinedArray, `${API_URL}/api/authenticated/post`);
             const postId = response.data.id;
-            console.log(response)
 
             if (postId) {
                 await uploadImage(postId);
             }
         }catch (error){
-            console.log(error)
+            const errors = error.response.data.errors
+            if(errors){
+                if(errors.title){
+                    setTitleError(errors.title[0]);
+                }
+            }
         }
     }
 
     useEffect(() => {
-        if(location.state){
-            setTitle(location.state)
+        if (location.state) {
+            const { title, status } = location.state;
+            if (title) setTitle(title);
+            if (status !== undefined) setPrivacy(status);
         }
     }, [location.state]);
+
 
     return (
         <div className="bg-[#111111] h-screen w-screen relative overflow-x-hidden">
@@ -188,10 +267,15 @@ const PostMain = () => {
                     </div>
                 </div>
             ) : (
-                <div className="flex md:flex-row flex-col gap-4 sm:h-full h-fit p-6">
+                <div className="flex md:flex-row flex-col gap-4 sm:h-full h-fit md:p-6 p-2">
                     <div className="flex flex-col md:w-1/2 w-full">
                         <h1 className="text-2xl text-neutral-200 mb-2">Post creation</h1>
                         <h1 className="text-xl text-neutral-600 mb-4">Posts are where the real magic happens - this is where you truly express yourself</h1>
+                        {!canPost && (
+                            <div className="mb-4 p-2 bg-red-800/30 border border-red-500 text-red-400 rounded-md">
+                                {cooldownMessage}
+                            </div>
+                        )}
                         <div className="flex flex-row gap-2 mb-2">
                             <div className="flex flex-col w-1/2">
                                 <h1 className="text-xl text-neutral-200 mb-2">Post title</h1>
@@ -203,19 +287,35 @@ const PostMain = () => {
                             </div>
                         </div>
                         <div className="flex flex-row gap-2 mb-4">
-                            <input
-                                type="text"
-                                className="bg-neutral-950 truncate text-neutral-200 w-1/2 rounded-md placeholder-neutral-600 indent-2 py-1 focus:outline-none focus:ring-[1px] focus:ring-neutral-200 transition duration-200"
-                                placeholder="post title"
-                                onChange = {(e) => setTitle(e.target.value)}
-                                value = {title}
-                            />
+                            <div className = "w-1/2">
+                                <input
+                                    type="text"
+                                    className={`bg-neutral-950 h-10 truncate text-neutral-200 w-full rounded-md placeholder-neutral-600 indent-2 py-1 focus:outline-none focus:ring-[1px] ${
+                                        titleError ? 'ring-red-500' : 'focus:ring-neutral-200'
+                                    } transition duration-200`}
+                                    placeholder="post title"
+                                    onChange={(e) => {
+                                        const val = e.target.value;
+                                        setTitle(val);
+
+                                        if (val.trim() === '') {
+                                            setTitleError('Title is required.');
+                                        } else if (val.length > 225) {
+                                            setTitleError('Title cannot exceed 225 characters.');
+                                        } else {
+                                            setTitleError(null);
+                                        }
+                                    }}
+                                    value={title}
+                                />
+                                {titleError && <p className="text-red-500 text-sm mt-1">{titleError}</p>}
+                            </div>
                             <div
-                                className= {`bg-neutral-950 relative rounded-md flex flex-row p-2 justify-between items-center cursor-pointer
-                            w-1/2 transform transition-all duration-300 ease-out`}
+                                className={`bg-neutral-950 relative rounded-md max-h-10 flex flex-row p-2 justify-between items-center cursor-pointer
+    w-1/2 transform transition-all duration-300 ease-out`}
                                 onClick={() => setDropdown(!dropdown)}
                             >
-                                <h1 className = "text-neutral-600">{selected}</h1>
+                                <h1 className="text-neutral-600 truncate w-full pr-6">{selected}</h1>
                                 <IoMdArrowDropdown
                                     className={`text-neutral-600 ${dropdown ? "rotate-180" : ""} transition-transform duration-300`}
                                 />
@@ -266,17 +366,26 @@ const PostMain = () => {
                         {questions && questions.map((question, index) => (
                             <div className="flex flex-col w-full mb-2">
                                 <h1 className="text-neutral-200 text-xl mb-4">{question}</h1>
-                                <input
-                                    key={index}
-                                    type="text"
-                                    className="bg-neutral-950 truncate text-neutral-200 w-full rounded-md placeholder-neutral-600 indent-2 py-1 focus:outline-none focus:ring-[1px] focus:ring-neutral-200 transition duration-200"
-                                    placeholder={question}
-                                    onChange = {(e) => handleInputChange(index, e.target.value)}
-                                />
+                                <div>
+                                    <input
+                                        key={index}
+                                        type="text"
+                                        className={`bg-neutral-950 truncate text-neutral-200 w-full rounded-md placeholder-neutral-600 indent-2 py-1 focus:outline-none focus:ring-[1px] ${
+                                            inputErrors[index] ? 'ring-red-500' : 'focus:ring-neutral-200'
+                                        } transition duration-200`}
+                                        placeholder={question}
+                                        onChange={(e) => handleInputChange(index, e.target.value)}
+                                        value={answers[index]}
+                                    />
+                                    <div className="flex justify-between mt-1 text-sm">
+                                        {inputErrors[index] && <p className="text-red-500">{inputErrors[index]}</p>}
+                                    </div>
+                                </div>
                             </div>
                         ))}
                         <TagSelector tags = {tags} setTags = {setTags}/>
-                        {complete && (
+
+                        {complete && canPost && (
                             <div
                                 className = "bg-green-600 mb-2 rounded-md mt-6 transition duration-200 hover:bg-green-700 cursor-pointer p-1 w-fit"
                                 onClick = {handleSubmit}
@@ -286,42 +395,6 @@ const PostMain = () => {
                         )}
                     </div>
                     <div className = "md:w-1/2 w-full flex justify-center items-center h-full gap-1">
-                        {/*<div className = "flex flex-col gap-2 w-1/2">*/}
-                        {/*    <h1 className = "text-neutral-200 text-2xl break-words whitespace-normal">{title}</h1>*/}
-                        {/*</div>*/}
-                        {/*<div className = "bg-[#111111] border-[1px] border-neutral-700 h-fit w-1/2 p-4 rounded-lg">*/}
-                        {/*    <div className="relative group" onClick={() => document.getElementById('fileInput').click()}>*/}
-                        {/*        <div*/}
-                        {/*            className="border-neutral-700 cursor-pointer border-[1px] h-40 rounded-lg mb-4"*/}
-                        {/*            style={{ backgroundImage: `url(${imageURL})`, backgroundSize: 'cover', backgroundPosition: 'center' }}*/}
-                        {/*        ></div>*/}
-                        {/*        <div className="absolute cursor-pointer inset-0 bg-neutral-950 p-4 bg-opacity-50 rounded-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">*/}
-                        {/*            <h1 className="text-neutral-200 text-center">Choose an image that you think fits your post</h1>*/}
-                        {/*        </div>*/}
-                        {/*        <input*/}
-                        {/*            type="file"*/}
-                        {/*            id="fileInput"*/}
-                        {/*            className="hidden"*/}
-                        {/*            onChange={handleFileChange}*/}
-                        {/*        />*/}
-                        {/*    </div>*/}
-                        {/*    {questions && questions.map((question, index) => (*/}
-                        {/*        <div*/}
-                        {/*            className = "flex flex-col"*/}
-                        {/*            key = {index}*/}
-                        {/*        >*/}
-                        {/*            <h1 className = "text-neutral-200 text-xl mb-2">{question}</h1>*/}
-                        {/*            {answers[index] ? (*/}
-                        {/*                <h1 className = "text-neutral-600 whitespace-normal break-words">{answers[index]}</h1>*/}
-                        {/*            ) : (*/}
-                        {/*                <>*/}
-                        {/*                    <div className="h-2 rounded-md bg-neutral-600 w-full mb-1"></div>*/}
-                        {/*                    <div className="h-2 rounded-md bg-neutral-600 w-3/5"></div>*/}
-                        {/*                </>*/}
-                        {/*            )}*/}
-                        {/*        </div>*/}
-                        {/*    ))}*/}
-                        {/*</div>*/}
                         <div className = "flex flex-col bg-neutral-950 h-fit p-4 rounded-lg">
                             <div className = "flex flex-row items-center">
                                 {userImage && userImage !== "null" && userImage !== "" ? (
@@ -397,6 +470,7 @@ const PostMain = () => {
 
                                 </div>
                             </div>
+                            {imageError && <p className="text-red-500 text-sm mt-1">{imageError}</p>}
                         </div>
                     </div>
                 </div>

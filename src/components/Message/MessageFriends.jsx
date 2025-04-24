@@ -3,7 +3,7 @@ import Friend from "./Friend";
 import FetchData from "../../reuse/FetchData";
 import {API_URL} from "../../config";
 
-const MessageFriends = ({setFriendID, setFriends, friends, setFriendsDistinct}) => {
+const MessageFriends = ({setFriendID, setFriends, friends, setFriendsDistinct, open, setOpen}) => {
 
     const fetch = async () => {
         try {
@@ -24,10 +24,11 @@ const MessageFriends = ({setFriendID, setFriends, friends, setFriendsDistinct}) 
     }, []);
 
     return (
-        <div className = "flex flex-col w-1/4 rounded-md py-4 px-2 h-full">
+        <div className = {`bg-[#111111] lg:w-1/4 md:w-2/6 w-full z-20 rounded-md py-4 px-2 p-2 h-full absolute left-0 top-0 transform transition-all duration-500 ease-in-out
+            ${open ? "translate-x-0 opacity-100" : "-translate-x-full opacity-0"} md:translate-x-0 md:opacity-100`}>
             <h1 className = "text-neutral-200 text-2xl mb-4">Messages</h1>
             {friends && friends.map((friend, index) => (
-                <Friend key={index} name={friend.name} image={friend.image} id = {() => setFriendID(friend.id)}/>
+                <Friend key={index} name={friend.name} image={friend.image} id = {() => setFriendID(friend.id)} open = {open} setOpen = {setOpen}/>
             ))}
         </div>
     );

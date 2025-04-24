@@ -32,12 +32,12 @@ const Friends = ({ friends, requests, setRequests, fetch, show}) => {
 
     return (
         <div
-            className={`h-screen p-2 md:w-1/4 w-full absolute right-0 rounded-bl-md top-0 bg-[#111111] transform transition-all duration-500 ease-in-out 
+            className={`h-full p-2 lg:w-1/4 w-full absolute right-0 rounded-bl-md top-0 bg-[#111111] transform transition-all duration-500 ease-in-out 
             ${show === "friends" ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"} 
             lg:translate-x-0 lg:opacity-100`}
         >
-            <div className = "flex flex-col bg-[#111111] h-full py-8 px-6 rounded-md">
-                <div className = "h-1/2">
+            <div className = "flex flex-col bg-[#111111] min-h-screen py-8 px-6 rounded-md">
+                <div className = "flex flex-col flex-grow">
                     <h1 className = "text-neutral-200 text-2xl mb-2">Friends</h1>
                     {allFriends.length > 0 ? (
                         allFriends.map((friend, index) => (
@@ -67,7 +67,7 @@ const Friends = ({ friends, requests, setRequests, fetch, show}) => {
                         </div>
                     )}
                 </div>
-                <div className = "h-1/2">
+                <div className = "flex flex-col flex-grow">
                     <h1 className = "text-neutral-200 text-2xl mb-2">Requests</h1>
                     {requests.length > 0 ? (
                         requests.map((request, index) => (
@@ -89,7 +89,7 @@ const Friends = ({ friends, requests, setRequests, fetch, show}) => {
                             </div>
                         ))
                     ) : (
-                        <div className="h-full flex flex-col justify-center items-center">
+                        <div className="flex-grow flex flex-col justify-center items-center">
                             <h1 className="text-neutral-600 text-xl">No friend requests</h1>
                         </div>
                     )}

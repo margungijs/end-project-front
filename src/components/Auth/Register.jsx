@@ -54,6 +54,7 @@ const Register = () => {
                 }));
             }
             if(!errorCheck(error)){
+                console.log(register);
                 SendData(
                     register, `${API_URL}/register`, isLoading
                 ).then(response => {

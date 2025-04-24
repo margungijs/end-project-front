@@ -27,6 +27,9 @@ const TemplateMain = () => {
     const [open, setOpen] = useState(false);
     const location = useLocation();
     const [tags, setTags] = useState([]);
+    const [titleError, setTitleError] = useState(null);
+    const [descError, setDescError] = useState(null);
+    const [inputErrors, setInputErrors] = useState([]);
 
     const addQuestion = () => {
         if (questions[questions.length - 1] !== "" && questions.length < 4) {
@@ -50,6 +53,17 @@ const TemplateMain = () => {
         const newQuestions = [...questions];
         newQuestions[index] = value;
         setQuestions(newQuestions);
+
+        const newErrors = [...inputErrors];
+        if (value.trim() === "") {
+            newErrors[index] = "This field is required.";
+        } else if (value.length > 100) {
+            newErrors[index] = "Message cannot exceed 100 characters.";
+        } else {
+            newErrors[index] = null;
+        }
+
+        setInputErrors(newErrors);
     };
 
     const checkFormComplete = () => {
@@ -72,7 +86,12 @@ const TemplateMain = () => {
                 setSuccess(true);
             })
             .catch(error => {
-                console.log("Error", error);
+                const errors = error.response.data.errors
+                if(errors){
+                    if(errors.title){
+                        setTitleError(errors.title[0]);
+                    }
+                }
             });
     };
 
@@ -142,20 +161,55 @@ const TemplateMain = () => {
                             </div>
                         </div>
                         <div className="flex flex-row gap-2 mb-4">
-                            <input
-                                type="text"
-                                className="bg-neutral-950 truncate text-neutral-200 w-1/2 rounded-md placeholder-neutral-600 indent-2 py-1 focus:outline-none focus:ring-[1px] focus:ring-neutral-200 transition duration-200"
-                                placeholder="template title"
-                                onChange={(e) => setTitle(e.target.value)}
-                                value = {title}
-                            />
-                            <input
-                                type="text"
-                                className="bg-neutral-950 truncate text-neutral-200 w-1/2 rounded-md placeholder-neutral-600 indent-2 py-1 focus:outline-none focus:ring-[1px] focus:ring-neutral-200 transition duration-200"
-                                placeholder="template description"
-                                onChange={(e) => setDescription(e.target.value)}
-                                value = {description}
-                            />
+                            <div className = "flex flex-col w-1/2">
+                                <input
+                                    type="text"
+                                    className={`bg-neutral-950 truncate text-neutral-200 w-full rounded-md placeholder-neutral-600 indent-2 py-1 focus:outline-none focus:ring-[1px] transition duration-200 ${
+                                        titleError ? 'ring-red-500' : 'focus:ring-neutral-200'
+                                    }`}
+                                    placeholder="template title"
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        setTitle(value);
+                                        if (value.length > 50) {
+                                            setTitleError("Title must be 50 characters or fewer.");
+                                        } else if(value === ''){
+                                            setTitleError("Title is required.");
+                                        } else {
+                                            setTitleError(null);
+                                        }
+                                    }}
+                                    value={title}
+                                />
+                                {titleError && (
+                                    <p className="text-red-500 text-sm mt-1">{titleError}</p>
+                                )}
+                            </div>
+
+                            <div className = "flex flex-col w-1/2">
+                                <input
+                                    type="text"
+                                    className={`bg-neutral-950 truncate text-neutral-200 w-full rounded-md placeholder-neutral-600 indent-2 py-1 focus:outline-none focus:ring-[1px] transition duration-200 ${
+                                        descError ? 'ring-red-500' : 'focus:ring-neutral-200'
+                                    }`}
+                                    placeholder="template description"
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        setDescription(value);
+                                        if (value.length > 255) {
+                                            setDescError("Description must be 255 characters or fewer.");
+                                        } else if(value === ''){
+                                            setDescError("Description is required.");
+                                        } else {
+                                            setDescError(null);
+                                        }
+                                    }}
+                                    value={description}
+                                />
+                                {descError && (
+                                    <p className="text-red-500 text-sm mt-1">{descError}</p>
+                                )}
+                            </div>
                         </div>
                         <h1 className="text-neutral-200 md:text-2xl text-xl mb-2">Template questions</h1>
                         <h1 className="md:text-xl text-md text-neutral-600 mb-4">Choose questions that you think matter to yourself and will help the self-reflection process</h1>
@@ -165,11 +219,16 @@ const TemplateMain = () => {
                                     <h1 className="text-neutral-200 text-xl mb-4">Question {index + 1}</h1>
                                     <input
                                         type="text"
-                                        className="bg-neutral-950 text-neutral-200 w-full rounded-md placeholder-neutral-600 indent-2 py-1 focus:outline-none focus:ring-[1px] focus:ring-neutral-200 transition duration-200"
+                                        className={`bg-neutral-950 truncate text-neutral-200 w-full rounded-md placeholder-neutral-600 indent-2 py-1 focus:outline-none focus:ring-[1px] ${
+                                            inputErrors[index] ? 'ring-red-500' : 'focus:ring-neutral-200'
+                                        } transition duration-200`}
                                         placeholder={`Question ${index + 1}`}
                                         value={question}
                                         onChange={(e) => handleInputChange(index, e.target.value)}
                                     />
+                                    <div className="flex justify-between mt-1 text-sm">
+                                        {inputErrors[index] && <p className="text-red-500">{inputErrors[index]}</p>}
+                                    </div>
                                 </div>
                             ))}
                             <div className = "flex flex-row gap-4 mb-4 mt-4">
@@ -187,7 +246,7 @@ const TemplateMain = () => {
                                 </div>
                             </div>
                             <TagSelector tags={tags} setTags={setTags}/>
-                            {isFormComplete && (
+                            {isFormComplete && titleError == null && descError == null && inputErrors.every(error => error === null) && (
                                 <div
                                     className = "bg-purple-600 mb-6 rounded-md transition duration-200 hover:bg-purple-700 cursor-pointer p-1 w-fit"
                                     onClick = {handleSubmit}

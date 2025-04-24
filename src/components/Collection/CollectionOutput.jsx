@@ -4,7 +4,7 @@ import {API_URL} from "../../config";
 
 const CollectionOutput = ({selected, collection, setUserSelected, setUserSelectedTemp}) => {
 
-    console.log(collection.items)
+    console.log(collection[0])
 
     return (
         <div className = "flex flex-col lg:ml-96 md:ml-80 p-4 gap-4 md:w-3/4 w-full">
@@ -13,7 +13,7 @@ const CollectionOutput = ({selected, collection, setUserSelected, setUserSelecte
                     <div className = "flex flex-col">
                         <h1 className = "text-neutral-200 text-xl">Posts</h1>
                         <div className="py-2 gap-4 overflow-x-hidden flex flex-row flex-wrap max-w-full">
-                            {collection && collection.map((item, index) => (
+                            {collection[0] && collection[0].map((item, index) => (
                                 item.answers && (
                                     <div
                                         className = "bg-[#111111] cursor-pointer flex flex-col w-72 p-1 rounded-md"
@@ -45,7 +45,7 @@ const CollectionOutput = ({selected, collection, setUserSelected, setUserSelecte
                     <div className = "flex flex-col">
                         <h1 className = "text-neutral-200 text-xl">Templates</h1>
                         <div className = "py-2 gap-4 overflow-x-hidden flex flex-row flex-wrap max-w-full">
-                            {collection && collection.map((item, index) => (
+                            {collection[0] && collection[0].map((item, index) => (
                                 item.description && (
                                     <div
                                         className="bg-[#111111] cursor-pointer flex flex-col w-72 p-1 rounded-md"
@@ -73,7 +73,7 @@ const CollectionOutput = ({selected, collection, setUserSelected, setUserSelecte
                     <div className = "flex flex-col">
                         <h1 className = "text-neutral-200 text-xl">Posts</h1>
                         <div className="py-2 gap-4 overflow-x-hidden flex flex-row flex-wrap max-w-full">
-                            {collection && collection.map((item, index) => (
+                            {collection[0] && collection[0].map((item, index) => (
                                 item.answers && (
                                     <div
                                         className = "bg-[#111111] cursor-pointer flex flex-col w-72 p-1 rounded-md"
@@ -106,7 +106,7 @@ const CollectionOutput = ({selected, collection, setUserSelected, setUserSelecte
                     <div className = "flex flex-col">
                         <h1 className = "text-neutral-200 text-xl">Templates</h1>
                         <div className = "py-2 gap-4 overflow-x-hidden flex flex-row flex-wrap max-w-full">
-                            {collection && collection.map((item, index) => (
+                            {collection[0] && collection[0].map((item, index) => (
                                 item.description && (
                                     <div
                                         className="bg-[#111111] cursor-pointer flex flex-col w-72 p-1 rounded-md"

@@ -89,7 +89,7 @@ const Dashboard = () => {
                         <h1 className = "text-neutral-600">Start using Chronicle</h1>
                     </div>
                     <div className = "flex lg:flex-row flex-col mb-6 gap-4">
-                        <NewPost />
+                        <NewPost postLimit={data.post_limit}/>
                         {/*<AdditionalInfo />*/}
                     </div>
                     <div className = "mb-2 flex flex-row items-center">

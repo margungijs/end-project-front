@@ -16,7 +16,7 @@ const GeneralMain = () => {
     const [tts, setTts] = useState(false);
     const fileInputRef = useRef(null);
     const [selectedImage, setSelectedImage] = useState(null);
-    const [imageError, setImageError] = useState(false);
+    const [imageError, setImageError] = useState(null);
     const [user, setUser] = useState([]);
     const [username, setUsername] = useState('');
     const [isChanging, setIsChanging] = useState(false);
@@ -24,6 +24,7 @@ const GeneralMain = () => {
     const [isTtsChanged, setIsTtsChanged] = useState(false);
     const [initialSlider, setInitialSlider] = useState(null);
     const [privacy, setPrivacy] = useState(false);
+    const [usernameError, setUsernameError] = useState(null);
 
     const marks = [
         { value: 0, label: '2 weeks' },
@@ -108,18 +109,36 @@ const GeneralMain = () => {
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
-        if (file && file.type.startsWith('image/')) {
-            setImageError(false)
+
+        if (file) {
+            const maxSizeKB = 2048;
+
+            if (!file.type.startsWith('image/')) {
+                setImageError('File must be an image');
+                console.error("File is not an image");
+                return;
+            }
+
+            if (file.size > maxSizeKB * 1024) {
+                setImageError('File is too large');
+                console.error("File is too large");
+                return;
+            }
+
+            setImageError(null);
+
             const reader = new FileReader();
             reader.onloadend = () => {
                 setSelectedImage(reader.result);
             };
             reader.readAsDataURL(file);
-            uploadImage(file)
+
+            uploadImage(file);
         } else {
             setImageError(true);
         }
     };
+
 
     const uploadImage = async (file) => {
         const formData = new FormData();
@@ -139,8 +158,17 @@ const GeneralMain = () => {
     };
 
     const handleInputChange = (e) => {
-        setUsername(e.target.value);
+        const value = e.target.value;
+
+        if (value.length < 3 || value.length > 30) {
+            setUsernameError('Invalid username');
+        } else {
+            setUsernameError(null);
+        }
+
+        setUsername(value);
     };
+
 
     const fetchData = async () => {
         try {
@@ -155,12 +183,12 @@ const GeneralMain = () => {
     };
 
     const handleSliderChange = (newValue) => {
-        setValue(newValue);
-        if(newValue === initialSlider){
+        if(newValue === user.post_limit.limit){
             setIsSliderChanged(false);
         }else{
             setIsSliderChanged(true);
         }
+        setValue(newValue);
     };
 
     const handleTtsChange = (newValue) => {
@@ -225,8 +253,18 @@ const GeneralMain = () => {
                 user.privacy = data.privacy;
                 handlePrivacyChange(data.privacy === 1);
             }
+
+            if('limit' in data){
+                user.post_limit.limit = data.limit
+                handleSliderChange(data.limit)
+            }
         }catch (error){
-            console.log(error)
+            const errors = error.response.data.errors
+            if(errors){
+                if(errors.name){
+                    setUsername(errors.name[0]);
+                }
+            }
         }
     }
 
@@ -299,13 +337,18 @@ const GeneralMain = () => {
             </div>
             {imageError && (
                 <div className = "bg-[#111111] border-[1px] border-red-600 my-2 rounded-md p-1 w-40 text-center">
-                    <h1 className = "text-neutral-200">Invalid file</h1>
+                    <h1 className = "text-neutral-200">{imageError}</h1>
+                </div>
+            )}
+            {usernameError && (
+                <div className = "bg-[#111111] border-[1px] border-red-600 my-2 rounded-md p-1 w-40 text-center">
+                    <h1 className = "text-neutral-200">{usernameError}</h1>
                 </div>
             )}
             {isChanging ? (
                 <div
                     className = "bg-[#111111] border-[1px] hover:border-neutral-500 transition duration-200 cursor-pointer border-neutral-700 mb-4 rounded-md text-center p-1 w-40"
-                    onClick = {() => setIsChanging(false)}
+                    onClick = {() => {setIsChanging(false); setUsername(''); setUsernameError(null)}}
                 >
                     <h1 className = "text-neutral-200">Cancel</h1>
                 </div>
@@ -380,7 +423,7 @@ const GeneralMain = () => {
                         onClick={() => handleTtsChange(!tts)}
                     ></div>
                     <div className = "flex flex-col">
-                        <h1 className = {`text-xl transition duration-200 ${tts ? "text-neutral-600" : "text-neutral-200"}`}>On</h1>
+                        <h1 className = {`text-xl transition duration-200 ${tts ? "text-neutral-200" : "text-neutral-600"}`}>On</h1>
                         <h1 className = "text-neutral-600">Posts and templates will be automatically converted to text-to-speech</h1>
                     </div>
                 </div>
@@ -390,12 +433,12 @@ const GeneralMain = () => {
                         onClick={() => handleTtsChange(!tts)}
                     ></div>
                     <div className = "flex flex-col">
-                        <h1 className = {`text-xl transition duration-200 ${tts ? "text-neutral-200" : "text-neutral-600"}`}>Off</h1>
+                        <h1 className = {`text-xl transition duration-200 ${tts ? "text-neutral-600" : "text-neutral-200"}`}>Off</h1>
                         <h1 className = "text-neutral-600">Automatic text-to-speech will be turned off</h1>
                     </div>
                 </div>
             </div>
-            {(username !== '' || isSliderChanged || isTtsChanged || isPrivacyChanged) && (
+            {((username !== '' || isSliderChanged || isTtsChanged || isPrivacyChanged) && usernameError == null) && (
                 <div
                     className="bg-[#111111] border-[1px] hover:border-green-600 transition duration-200 cursor-pointer border-neutral-700 mb-4 rounded-md text-center p-1 w-20"
                     onClick={handleEdit}

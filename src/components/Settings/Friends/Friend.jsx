@@ -23,8 +23,8 @@ const Friend = ({friend, remove}) => {
     }
 
     return (
-        <div className = "bg-[#111111] flex flex-row p-2 rounded-md items-center mb-2 w-2/3 justify-between">
-            <div className = "flex flex-row">
+        <div className = "bg-[#111111] flex flex-row p-2 rounded-md items-center mb-2 lg:w-2/3 w-full justify-between">
+            <div className = "flex flex-row items-center">
                 {friend.image !== null ? (
                     <img src={`${API_URL}/storage/` + friend.image} className = "w-14 h-14 rounded-full mr-2"/>
                 ) : (
@@ -34,10 +34,10 @@ const Friend = ({friend, remove}) => {
                     <h1
                         className="text-neutral-200 text-md"
                     >{friend.name}</h1>
-                    <h1 className="text-neutral-600 text-sm">Friends since {friend.became_friends_at}</h1>
+                    <h1 className="text-neutral-600 text-sm w-2/3">Friends since {friend.became_friends_at}</h1>
                 </div>
             </div>
-            <div className = "flex flex-row gap-2">
+            <div className = "flex md:flex-row flex-col gap-2">
                 <h1
                     className = "text-neutral-200 cursor-pointer hover:text-white transition duration-200"
                     onClick = {() => navigateToProfile(friend.id, friend.name)}

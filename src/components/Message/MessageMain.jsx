@@ -8,10 +8,10 @@ import Pusher from 'pusher-js';
 import FetchData from "../../reuse/FetchData";
 import SendDataGeneral from "../../reuse/SendDataGeneral";
 import friend from "./Friend";
-import {useLocation} from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import MessageStatic from "./MessageStatic";
-import {FaRegUserCircle} from "react-icons/fa";
-import {API_URL} from "../../config";
+import { FaRegUserCircle } from "react-icons/fa";
+import { API_URL } from "../../config";
 
 const MessageMain = () => {
     const location = useLocation();
@@ -29,19 +29,24 @@ const MessageMain = () => {
     const [sendUserID, setSendUserID] = useState(-1);
     const [currentFriend, setCurrentFriend] = useState(null);
     const [open, setOpen] = useState(false);
+    const [sideBar, setSideBar] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(''); // State to hold error message
+
+    const image = localStorage.getItem('image');
+    const name = localStorage.getItem('name');
 
     useEffect(() => {
         setSendUserID(key === 1 ? -1 : friendID);
         setSendFriendID(key === 0 ? -1 : friendID);
         setCurrentFriend(friends.find(friend => friend.id == friendID));
-    }, [friendID])
+    }, [friendID, key, friends]);
 
     const fetchConversationHistory = async () => {
-        try{
-            const response = await FetchData(`${API_URL}/api/authenticated/messages/${friendID}`)
+        try {
+            const response = await FetchData(`${API_URL}/api/authenticated/messages/${friendID}`);
             setConversationHistory(response);
-        }catch (error){
-            console.log(error)
+        } catch (error) {
+            console.log(error);
         }
     };
 
@@ -51,65 +56,80 @@ const MessageMain = () => {
 
     useEffect(() => {
         const pusher = new Pusher('29da91ef69dd6d53763e', {
-            cluster: 'eu'
+            cluster: 'eu',
         });
 
-        const chat = sendFriendID === -1 ? `chat.${friendID}.${localStorage.getItem('id')}` : `chat.${localStorage.getItem('id')}.${friendID}`;
+        const currentUserId = localStorage.getItem('id');
 
-        const channel = pusher.subscribe(chat);
-        channel.bind('message.sent', function(data) {
-            setConversationHistory(prev => {
-                const newConversationId = prev.length > 0 ? prev[0].conversation_id + 1 : 1;
-                return [...prev, { id: newConversationId, user_id: data.user, friend_id: data.friend, message: data.message, sender: data.sender, conversation_id: newConversationId }];
-            });
+        const channelName = `chat.${Math.min(currentUserId, friendID)}.${Math.max(currentUserId, friendID)}`;
+        const channel = pusher.subscribe(channelName);
+
+        channel.bind('message.sent', function (data) {
+            console.log('📩 Message received:', data);
+            setConversationHistory(prev => [
+                ...prev,
+                {
+                    user_id: data.user,
+                    friend_id: data.friend,
+                    message: data.message,
+                    sender: data.sender,
+                    conversation_id: prev.length + 1,
+                },
+            ]);
         });
-
 
         return () => {
             channel.unbind_all();
             channel.unsubscribe();
         };
-    }, [sendFriendID])
-
+    }, [friendID]);
 
     const sendMessage = async () => {
+        if (message.length > 500) {
+            setErrorMessage('Message length should not exceed 500 characters.');
+            return;
+        }
+
+        setErrorMessage('');
+
         try {
             const payload = {
                 message: message,
                 [sendFriendID === -1 ? 'user_id' : 'friend_id']: friendID
             };
-            const response = await SendDataGeneral(payload,`${API_URL}/api/authenticated/sendMessage`);
+            const response = await SendDataGeneral(payload, `${API_URL}/api/authenticated/sendMessage`);
             setMessage('');
-        }catch (error){
-            console.log(error)
+            console.log(response);
+        } catch (error) {
+            console.log(error);
         }
     }
 
     return (
-        <div className = "flex flex-col bg-[#111111] h-screen w-screen relative overflow-x-hidden">
-            <DashboardHeader profile={() => setOpen(!open)} open = {open}/>
-            <div className = "flex flex-row p-4 h-full gap-2">
-                <MessageFriends setFriendID={setFriendID} setFriends={setFriends} friends = {friends} setFriendsDistinct={setFriendsDistinct}/>
+        <div className="flex flex-col bg-[#111111] h-screen w-screen relative overflow-x-hidden">
+            <DashboardHeader profile={() => setOpen(!open)} open={open} setOpen={setSideBar} colOpen={sideBar} />
+            <div className="flex flex-row md:p-4 p-2 h-full gap-2 relative justify-end">
+                <MessageFriends setFriendID={setFriendID} setFriends={setFriends} friends={friends} setFriendsDistinct={setFriendsDistinct} open={sideBar} setOpen={setSideBar} />
                 {friendID ? (
-                    <div className="flex flex-col w-1/2 h-full gap-2 relative">
+                    <div className="flex flex-col lg:w-3/4 md:w-4/6 w-full h-full gap-2 relative">
                         {currentFriend && (
-                            <div className = "z-10 bg-[#111111] items-center p-2 flex flex-row w-full border-[1px] border-neutral-700 rounded-md">
+                            <div className="z-10 bg-[#111111] items-center p-2 flex flex-row w-full rounded-md">
                                 {currentFriend.image !== null ? (
-                                    <img src={`${API_URL}/storage/` + currentFriend.image} className = "w-10 h-10 rounded-full mr-2"/>
+                                    <img src={`${API_URL}/storage/` + currentFriend.image} className="w-10 h-10 rounded-full mr-2" />
                                 ) : (
-                                    <FaRegUserCircle className = "w-10 h-10 text-neutral-700 mr-2"/>
+                                    <FaRegUserCircle className="w-10 h-10 text-neutral-700 mr-2" />
                                 )}
-                                <h1 className = "text-2xl text-neutral-200">{currentFriend.name}</h1>
+                                <h1 className="text-2xl text-neutral-200">{currentFriend.name}</h1>
                             </div>
                         )}
-                        <div className="flex flex-col-reverse overflow-y-auto h-[700px]">
+                        <div className="flex flex-col-reverse overflow-y-auto h-[700px] w-full">
                             {conversationHistory && conversationHistory
                                 .sort((a, b) => b.conversation_id - a.conversation_id)
                                 .map((convo, index) => (
                                     convo.sender == localStorage.getItem('id') ? (
-                                        <UserMessage key={index} message={convo.message}/>
+                                        <UserMessage key={index} message={convo.message} image={image} name={name} />
                                     ) : (
-                                        <FriendMessage key={index} message={convo.message}/>
+                                        <FriendMessage key={index} message={convo.message} image={currentFriend?.image} name={currentFriend?.name} />
                                     )
                                 ))
                             }
@@ -127,6 +147,11 @@ const MessageMain = () => {
                                 className="text-green-500 hover:text-green-600 transition duration-200 w-12 h-12 cursor-pointer flex-shrink-0"
                             />
                         </div>
+                        {errorMessage && (
+                            <div className="text-red-500 text-sm mt-2">
+                                {errorMessage}
+                            </div>
+                        )}
                     </div>
                 ) : (
                     <MessageStatic />

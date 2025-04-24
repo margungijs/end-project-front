@@ -21,7 +21,7 @@ const Shortcut = () => {
                     className={`text-neutral-600 ${dropdown ? "rotate-180" : ""} transition-transform duration-300`}
                 />
                 <div
-                    className={`left-0 absolute bg-neutral-950 p-1 top-12 flex flex-col w-full border-[1px] border-neutral-700 rounded-md 
+                    className={`left-0 absolute bg-neutral-950 p-1 top-12 flex flex-col w-full rounded-md 
                     transform transition-all duration-300 ease-out ${
                         dropdown ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2 pointer-events-none"
                     }`}

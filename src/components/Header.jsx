@@ -19,8 +19,6 @@ const Header = () => {
             <div className = "flex flex-row md:ml-2">
                 <img src={Logo} className = "w-9 h-9 self-center"/>
                 <h1 className = "md:mr-6 mr-4 text-center md:ml-10 ml-4 items-center flex font-medium cursor-pointer hover:text-neutral-300 duration-300 transition">Home</h1>
-                <h1 className = "md:mx-6 mr-4 text-center items-center flex font-medium cursor-pointer hover:text-neutral-300 duration-300 transition">How It Works</h1>
-                <h1 className = "md:mx-6 mx-4 text-center items-center flex font-medium cursor-pointer hover:text-neutral-300 duration-300 transition">About Us</h1>
             </div>
             <div className = "flex flex-row mr-2">
                 <h1

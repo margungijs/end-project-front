@@ -2,11 +2,14 @@ import React from 'react';
 import { FaRegUserCircle } from "react-icons/fa";
 import {API_URL} from "../../config";
 
-const Friend = ({name, image, id}) => {
+const Friend = ({name, image, id, open, setOpen}) => {
     return (
         <div
-            className = "flex mb-2 flex-col cursor-pointer border-neutral-700 border-[1px] rounded-md p-2"
-            onClick = {id}
+            className = "flex mb-2 flex-col cursor-pointer bg-neutral-900 rounded-md p-2"
+            onClick={() => {
+                setOpen(false);
+                id();
+            }}
         >
             <div className = "flex flex-row items-center">
                 {image !== null ? (

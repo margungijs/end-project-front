@@ -130,6 +130,9 @@ const Explore = ({ filter }) => {
                     />
                 );
             })}
+            {isLoading && (
+                <div className="text-center text-sm text-gray-500">Loading more...</div>
+            )}
         </div>
     );
 };

@@ -70,6 +70,13 @@ export const HandleInputChange = (e, setState, setError, type) => {
         ...prevState,
         [name]: value,
     }));
+
+    if (name === 'email') {
+        setState((prevState) => ({
+            ...prevState,
+            [name]: value.toLowerCase(),
+        }));
+    }
 }
 
 
