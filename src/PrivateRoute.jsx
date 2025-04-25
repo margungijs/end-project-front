@@ -4,11 +4,11 @@ import { Navigate, Outlet } from 'react-router-dom';
 const ProtectedRoute = () => {
     const { user, ready } = useAuth();
 
-    console.log(user);
-
     if (!ready) return null;
 
-    return user ? <Outlet /> : <Navigate to="/" replace />;
+    if (!user && ready) return <Navigate to="/" replace />;
+
+    return <Outlet />;
 };
 
 export default ProtectedRoute;

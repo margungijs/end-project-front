@@ -3,16 +3,13 @@ import Image from "../../assets/images/placeholder.png";
 import {API_URL} from "../../config";
 
 const CollectionOutput = ({selected, collection, setUserSelected, setUserSelectedTemp}) => {
-
-    console.log(collection[0])
-
     return (
-        <div className = "flex flex-col lg:ml-96 md:ml-80 p-4 gap-4 md:w-3/4 w-full">
+        <div className = "flex flex-col p-4 gap-4 lg:w-3/4 w-full">
             {selected === 0 ? (
-                <div className = "flex flex-col">
-                    <div className = "flex flex-col">
+                <div className = "flex flex-col lg:justify-none justify-center lg:items-baseline items-center">
+                    <div className = "flex flex-col lg:justify-start justify-center lg:items-start items-center">
                         <h1 className = "text-neutral-200 text-xl">Posts</h1>
-                        <div className="py-2 gap-4 overflow-x-hidden flex flex-row flex-wrap max-w-full">
+                        <div className="py-2 gap-4 overflow-x-hidden flex flex-row flex-wrap max-w-full lg:justify-start justify-center lg:items-start items-center">
                             {collection[0] && collection[0].map((item, index) => (
                                 item.answers && (
                                     <div
@@ -42,9 +39,9 @@ const CollectionOutput = ({selected, collection, setUserSelected, setUserSelecte
                             ))}
                         </div>
                     </div>
-                    <div className = "flex flex-col">
+                    <div className = "flex flex-col lg:justify-start justify-center lg:items-start items-center">
                         <h1 className = "text-neutral-200 text-xl">Templates</h1>
-                        <div className = "py-2 gap-4 overflow-x-hidden flex flex-row flex-wrap max-w-full">
+                        <div className = "py-2 gap-4 overflow-x-hidden flex flex-row flex-wrap max-w-full lg:justify-start justify-center lg:items-start items-center">
                             {collection[0] && collection[0].map((item, index) => (
                                 item.description && (
                                     <div
@@ -70,9 +67,9 @@ const CollectionOutput = ({selected, collection, setUserSelected, setUserSelecte
                 </div>
             ) : (
                 selected == 1 ? (
-                    <div className = "flex flex-col">
+                    <div className = "flex flex-col lg:justify-start justify-center lg:items-start items-center">
                         <h1 className = "text-neutral-200 text-xl">Posts</h1>
-                        <div className="py-2 gap-4 overflow-x-hidden flex flex-row flex-wrap max-w-full">
+                        <div className="py-2 gap-4 overflow-x-hidden flex flex-row flex-wrap max-w-full lg:justify-start justify-center lg:items-start items-center">
                             {collection[0] && collection[0].map((item, index) => (
                                 item.answers && (
                                     <div
@@ -103,9 +100,9 @@ const CollectionOutput = ({selected, collection, setUserSelected, setUserSelecte
                         </div>
                     </div>
                 ) : (
-                    <div className = "flex flex-col">
+                    <div className = "flex flex-col lg:justify-start justify-center lg:items-start items-center">
                         <h1 className = "text-neutral-200 text-xl">Templates</h1>
-                        <div className = "py-2 gap-4 overflow-x-hidden flex flex-row flex-wrap max-w-full">
+                        <div className = "py-2 gap-4 overflow-x-hidden flex flex-row flex-wrap max-w-full lg:justify-start justify-center lg:items-start items-center">
                             {collection[0] && collection[0].map((item, index) => (
                                 item.description && (
                                     <div

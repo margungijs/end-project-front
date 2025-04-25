@@ -10,7 +10,7 @@ import {useAuth} from "../../AuthContext";
 const Auth = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
-
+    const { refetchUser } = useAuth();
 
     const HandleSignUp = () => {
         navigate('/register');
@@ -42,30 +42,31 @@ const Auth = () => {
 
     const [forceUpdate, setForceUpdate] = useState(false);
 
-    const HandleSubmit = () => {
+    const HandleSubmit = async () => {
         touched(login, error);
         console.log(login, error)
         setForceUpdate(prevState => !prevState);
         if(!errorCheck(error)){
             setBError(false);
-            SendData(
-                login, `${ API_URL }/login`, isLoading
-            ).then(response => {
+            try {
+                const response = await SendData(login, `${API_URL}/login`, isLoading);
                 stopLoading();
-                if(!response){
+
+                if (!response) {
+                    await refetchUser();
                     HandleRedirect();
                 }
-            }).catch(error => {
-                console.log("Error", error)
-                setBError(true)
-                stopLoading()
-            })
+            } catch (error) {
+                console.log("Error", error);
+                setBError(true);
+                stopLoading();
+            }
         }
     }
 
     return (
         <div className = "bg-neutral-950 h-screen w-screen flex flex-col items-center overflow-x-hidden">
-            <div className = "bg-[#111111] rounded-lg lg:w-3/12 md:w-4/12 w-8/12 mt-40 py-8 px-6 mb-4">
+            <div className = "bg-[#111111] rounded-lg lg:w-3/12 md:w-4/12 w-10/12 mt-40 py-8 px-6 mb-4">
                 {!loading && (
                     <>
                         <h1 className = "text-4xl text-yellow-300 mb-8">Sign into Chronicle</h1>
@@ -99,11 +100,11 @@ const Auth = () => {
                 )}
             </div>
             {Berror && (
-                <div className = "bg-[#111111] rounded-lg lg:w-3/12 md:w-4/12 w-8/12 py-6 border-[1px] text-center border-red-700 flex flex-col items-center justify-center mb-4">
+                <div className = "bg-[#111111] rounded-lg lg:w-3/12 md:w-4/12 w-10/12 py-6 border-[1px] text-center border-red-700 flex flex-col items-center justify-center mb-4">
                     <h1 className = "text-red-700">Invalid username or password</h1>
                 </div>
             )}
-            <div className = "bg-[#111111] rounded-lg lg:w-3/12 md:w-4/12 w-8/12 py-6 flex flex-col items-center text-center justify-center px-2">
+            <div className = "bg-[#111111] rounded-lg lg:w-3/12 md:w-4/12 w-10/12 py-6 flex flex-col items-center text-center justify-center px-2">
                 <h1 className = "text-neutral-200">Don't have an account? <span className = "text-blue-500 cursor-pointer" onClick = {HandleSignUp}>Sign up</span></h1>
             </div>
         </div>

@@ -3,9 +3,9 @@ import {IoMdArrowDropdown} from "react-icons/io";
 import FetchData from "../../../reuse/FetchData";
 import { API_URL } from "../../../config";
 
-const ShortcutConfiguration = ({ newRoute }) => {
+const ShortcutConfiguration = ({ newRoute, route }) => {
     const [dropdown, setDropdown] = useState(false);
-    const [value, setValue] = useState('Profile');
+    const [value, setValue] = useState(route ?? 'Profile');
     const [friendDropdown, setFriendDropdown] = useState(false);
     const [friendValue, setFriendValue] = useState('');
     const [friends, setFriends] = useState([]);

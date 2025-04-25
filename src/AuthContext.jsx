@@ -27,8 +27,20 @@ export const AuthProvider = ({ children }) => {
         fetchUser();
     }, []);
 
+    const refetchUser = async () => {
+        try {
+            await axios.get(`${API_URL}/sanctum/csrf-cookie`);
+            const res = await axios.get(`${API_URL}/api/authenticated/user`);
+            setUser(res.data.user);
+        } catch {
+            setUser(null);
+        } finally {
+            setReady(true);
+        }
+    };
+
     return (
-        <AuthContext.Provider value={{ user, ready }}>
+        <AuthContext.Provider value={{ user, ready, setUser, refetchUser}}>
             {children}
         </AuthContext.Provider>
     );

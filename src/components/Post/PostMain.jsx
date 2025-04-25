@@ -60,7 +60,7 @@ const PostMain = () => {
     ];
 
     useEffect(() => {
-        if (Array.isArray(user.post_limit.posts) && user.post_limit.posts.length === 0) {
+        if (Array.isArray(user.post_limit.posts) && user.post_limit.posts.length == 0) {
             setCanPost(true);
             setCooldownMessage('');
             return;
@@ -130,8 +130,8 @@ const PostMain = () => {
         const newErrors = [...inputErrors];
         if (value.trim() === "") {
             newErrors[index] = "This field is required.";
-        } else if (value.length > 225) {
-            newErrors[index] = "Message cannot exceed 225 characters.";
+        } else if (value.length > 100) {
+            newErrors[index] = "Message cannot exceed 100 characters.";
         } else {
             newErrors[index] = null;
         }
@@ -300,8 +300,8 @@ const PostMain = () => {
 
                                         if (val.trim() === '') {
                                             setTitleError('Title is required.');
-                                        } else if (val.length > 225) {
-                                            setTitleError('Title cannot exceed 225 characters.');
+                                        } else if (val.length > 50) {
+                                            setTitleError('Title cannot exceed 50 characters.');
                                         } else {
                                             setTitleError(null);
                                         }
@@ -414,7 +414,7 @@ const PostMain = () => {
                                     ) : (
                                         <FaRegUserCircle className = "w-6 h-6 text-neutral-700 mr-2"/>
                                     )}
-                                    <h1 className = "text-neutral-200">{username}: {title}</h1>
+                                    <h1 className = "text-neutral-200 break-all">{username}: {title}</h1>
                                 </div>
                                 <div
                                     className = "bg-neutral-900 hover:bg-neutral-800 transition duration-200 cursor-pointer rounded-md px-2 flex items-center flex-row py-1"

@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import { IoMdArrowDropdown } from "react-icons/io";
 import {useNavigate} from "react-router-dom";
 
-const Shortcut = () => {
+const Shortcut = ({friends}) => {
     const navigate = useNavigate();
     const [dropdown, setDropdown] = useState(false);
 
@@ -31,10 +31,18 @@ const Shortcut = () => {
                             className="hover:bg-neutral-900 rounded-md transition duration-200 p-1"
                             onClick={() => setValue('Profile')}
                         >Profile</li>
-                        <li
-                            className="hover:bg-neutral-900 rounded-md transition duration-200 p-1"
-                            onClick={() => setValue('Friends')}
-                        >Friends</li>
+                        {friends && friends.length > 0 && (
+                            <>
+                                <li
+                                    className="hover:bg-neutral-900 rounded-md transition duration-200 p-1"
+                                    onClick={() => setValue('Friends')}
+                                >Friends</li>
+                                <li
+                                    className="hover:bg-neutral-900 rounded-md transition duration-200 p-1"
+                                    onClick={() => setValue('Messages')}
+                                >Messages</li>
+                            </>
+                        )}
                         <li
                             className="hover:bg-neutral-900 rounded-md transition duration-200 p-1"
                             onClick={() => setValue('Settings')}

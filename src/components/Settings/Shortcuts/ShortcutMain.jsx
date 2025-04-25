@@ -20,7 +20,6 @@ const ShortcutMain = () => {
         route: "",
         icon: 0,
         color: "",
-        hover_color: ""
     })
 
     useEffect(() => {
@@ -98,6 +97,12 @@ const ShortcutMain = () => {
         setShortcuts((prevShortcuts) => prevShortcuts.filter(shortcut => shortcut.id !== id));
     }
 
+    useEffect(() => {
+        if (location.state) {
+            newRoute(location.state);
+        }
+    }, [location.state]);
+
     return (
         <div className = "flex flex-row lg:justify-end w-full md:gap-4">
             <div className = "p-2 lg:pl-14 lg:w-1/2 md:w-2/3 w-full flex flex-col">
@@ -133,7 +138,7 @@ const ShortcutMain = () => {
                     <>
                         <h1 className = "text-neutral-200 text-xl mb-1">Configure your shortcut</h1>
                         <h1 className = "text-neutral-600 text-md mb-2">Choose a part of Chronicle you want to navigate quicker to - you can't have two shortcuts with the same route though</h1>
-                        <ShortcutConfiguration newRoute = {newRoute}/>
+                        <ShortcutConfiguration newRoute = {newRoute} route = {newShortcut.route}/>
                     </>
                 )}
                 {newShortcut.route !== "" && newShortcut.name && (
@@ -148,7 +153,7 @@ const ShortcutMain = () => {
                         <h1 className = "text-red-700">Invalid shortcut creation</h1>
                     </div>
                 )}
-                {newShortcut.name && newShortcut.route && newShortcut.icon && newShortcut.color && newShortcut.hover_color && (
+                {newShortcut.name && newShortcut.route && newShortcut.icon && newShortcut.color && (
                     <div
                         className="rounded-md cursor-pointer transition px-2 duration-200 hover:bg-blue-700 bg-blue-600 w-fit p-1"
                         onClick={submitShortcut}

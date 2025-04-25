@@ -65,17 +65,19 @@ const FriendPost = React.forwardRef(({name, image, title, date, template, answer
                     onClick = {() => navigateToProfile(user_id)}
                 >{name}</h1>
                 <BsStars className = "text-neutral-200 mr-1"/>
-                <h1 className = "text-neutral-600">added a new post</h1>
+                <h1 className = "text-neutral-600 md:text-md text-sm">added a new post</h1>
             </div>
             <h1 className = "text-neutral-600 text-sm ml-10 mb-4">{date}</h1>
             <div className = "flex flex-row bg-neutral-900 items-center rounded-md p-4 justify-between">
-                <div className = "flex flex-row items-center">
+                <div className = "flex flex-row items-center sm:justify-normal justify-center">
                     {image !== null ? (
-                        <img src={`${API_URL}/storage/` + image} className = "w-6 h-6 rounded-full mr-2"/>
+                        <img src={`${API_URL}/storage/` + image} className = "w-6 h-6 sm:block hidden rounded-full mr-2"/>
                     ) : (
-                        <FaRegUserCircle className = "w-6 h-6 text-neutral-700 mr-2"/>
+                        <FaRegUserCircle className = "w-6 h-6 sm:block hidden text-neutral-700 mr-2"/>
                     )}
-                    <h1 className = "text-neutral-200">{name}: {title}</h1>
+                    <h1 className="text-neutral-200 break-all">
+                        {name}: <span className="text-sm">{title}</span>
+                    </h1>
                 </div>
                 <div
                     className = "bg-neutral-900 hover:bg-neutral-800 transition duration-200 cursor-pointer rounded-md px-2 flex items-center flex-row py-1"

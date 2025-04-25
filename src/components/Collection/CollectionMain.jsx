@@ -38,7 +38,7 @@ const CollectionMain = () => {
     return (
         <div className="bg-neutral-950 flex flex-col w-screen h-screen relative overflow-x-hidden">
             <DashboardHeader setOpen = {setOpen} colOpen={open} profile={() => setOpens(!opens)} open = {opens}/>
-            <div className="flex flex-row p-2 h-full w-full gap-2 relative justify-between">
+            <div className="flex flex-row p-2 h-full w-full gap-2 relative justify-end">
                 <CollectionFilter selected={selected} setSelected={setSelected} open = {open} setOpen = {setOpen}/>
                 <CollectionOutput selected={selected} collection={collection} setUserSelected={setUserSelectedPost} setUserSelectedTemp = {setUserSelectedTemp}/>
             </div>

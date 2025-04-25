@@ -2,8 +2,8 @@ import React from 'react';
 
 const CollectionFilter = ({selected, setSelected, open}) => {
     return (
-        <div className = {`bg-[#111111] lg:w-1/4 md:w-2/6 z-10 rounded-md py-4 px-2 p-2 h-full absolute left-0 top-0 transform transition-all duration-500 ease-in-out
-            ${open ? "translate-x-0 opacity-100" : "-translate-x-full opacity-0"} md:translate-x-0 md:opacity-100
+        <div className = {`bg-[#111111] lg:w-1/4 w-full z-10 rounded-md py-4 px-2 p-2 h-full absolute left-0 top-0 transform transition-all duration-500 ease-in-out
+            ${open ? "translate-x-0 opacity-100" : "-translate-x-full opacity-0"} lg:translate-x-0 md:opacity-100
         `}>
             <h1 className = "text-neutral-200 text-2xl mb-2">Your collection</h1>
             <h1 className = "text-neutral-600 text-xl mb-4">This is where you can see all your stared posts and templates - maybe some inspiration can grow here</h1>

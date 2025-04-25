@@ -199,7 +199,7 @@ const DashboardHeader = ({ profile, open, sideBar, sideCurrent, setOpen, colOpen
                 )}
                 {(isCollection || isPosts) && (
                     <div
-                        className="w-8 h-8 rounded-lg border-[1px] mr-4 border-neutral-700 cursor-pointer md:hidden flex items-center justify-center"
+                        className="w-8 h-8 rounded-lg border-[1px] mr-4 border-neutral-700 cursor-pointer lg:hidden flex items-center justify-center"
                         onClick={() => setOpen(!colOpen)}
                     >
                         <FaFilter className="text-neutral-700" />
@@ -215,7 +215,7 @@ const DashboardHeader = ({ profile, open, sideBar, sideCurrent, setOpen, colOpen
                 )}
                 {isMessages && (
                     <div
-                        className="w-8 h-8 rounded-lg border-[1px] mr-4 border-neutral-700 cursor-pointer lg:hidden flex items-center justify-center"
+                        className="w-8 h-8 rounded-lg border-[1px] mr-4 border-neutral-700 cursor-pointer md:hidden flex items-center justify-center"
                         onClick={() => setOpen(!colOpen)}
                     >
                         <FaUserFriends className="text-neutral-700" />

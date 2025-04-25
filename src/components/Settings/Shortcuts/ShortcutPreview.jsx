@@ -45,8 +45,7 @@ const ShortcutPreview = ({shortcuts, preview, remove}) => {
                 <div
                     key={index}
                     className={`relative flex flex-row items-center cursor-pointer 
-                        text-${shortcut.customisation.color.toLowerCase()}-500 
-                        hover:text-${shortcut.customisation.hover_color.toLowerCase()}-700 
+                        text-${shortcut.customisation.color.toLowerCase()}-500
                         transform transition-all duration-300 mb-8`}
                     onMouseEnter={() => setHoveredIndex(index)}
                     onMouseLeave={() => setHoveredIndex(null)}
@@ -87,7 +86,7 @@ const ShortcutPreview = ({shortcuts, preview, remove}) => {
                         {React.cloneElement(icons.find((item) => item.value === preview.icon).logo, { className: "w-8 h-8" })}
                     </div>
                 )}
-                <h1 className = {`text-xl transition duration-200 text-${preview.color.toLowerCase()}-500 hover:text-${preview.hover_color.toLowerCase()}-700`}>{preview.name}</h1>
+                <h1 className = {`text-xl transition duration-200 text-${preview.color.toLowerCase()}-500`}>{preview.name}</h1>
             </div>
         </div>
     );

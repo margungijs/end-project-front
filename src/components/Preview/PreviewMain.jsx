@@ -5,7 +5,7 @@ import { IoIosClose } from "react-icons/io";
 
 const PreviewMain = ({post, setUserSelected}) => {
     return (
-        <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-10 p-10">
+        <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-10 md:p-10 p-4">
             <div className="bg-[#111111] lg:w-1/4 md:w-2/4 sm:w-2/3 w-full p-6 rounded-md relative">
                 <div
                     className = "absolute top-1 left-1 cursor-pointer"

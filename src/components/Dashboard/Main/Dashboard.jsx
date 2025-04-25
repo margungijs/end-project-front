@@ -53,7 +53,7 @@ const Dashboard = () => {
             <div className = "flex flex-row items-center justify-center relative">
                 <Shortcuts shortcuts = {shortcuts} show = {sideBars}/>
                 <div className = "flex flex-col px-2 py-8 lg:w-1/2 md:w-3/4 w-full">
-                    <div className="flex flex-row mb-4 justify-between">
+                    <div className="flex md:flex-row flex-col mb-4 md:justify-between">
                         <div className="flex flex-row">
                             <h1 className="text-2xl text-neutral-200 mr-4">Chronicle</h1>
                             <h1
@@ -97,7 +97,7 @@ const Dashboard = () => {
                         <h1 className = "text-neutral-600">Getting deeper</h1>
                     </div>
                     <div className = "flex lg:flex-row flex-col mb-6 gap-4">
-                        <Shortcut />
+                        <Shortcut friends = {[...(friends.friends || []), ...(friends.friends1 || [])]}/>
                         <Template />
                     </div>
                     {/*<div className = "flex gap-6 flex-col">*/}
